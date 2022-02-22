@@ -1,0 +1,340 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        .flexContainer {
+            display: flex;
+        }
+
+        .inputField {
+            flex: 1;
+        }
+
+        .form-control-custom {
+            font-size: 2rem;
+        }
+
+        .btn-custom-size {
+            font-size: 2rem;
+        }
+
+        .highlight_font_take_out {
+            background-color: #e34140;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="card text-center">
+        <div class="card-header">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+                <button type="button" class="btn btn-md btn-warning ml-3 " id="back_btn"><i class="ms-Icon ms-Icon--Back" style="color:white;"></i></button>
+                <h5><b style="color:red;">TAKE OUT :</b> SCAN LOT CARD</h5>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center h-100">
+                <div class="col-sm-6">
+                    <!-- sector first-->
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="form-group">
+                            <label for="">Lot information</label>
+                            <input type="text" class="form-control form-control-custom" id="lot_regis" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="form-group">
+                            <label for="">Location</label>
+                            <input type="text" class="form-control form-control-custom" id="inf_card_regis" placeholder="">
+                        </div>
+                    </div>
+
+                    <input type="hidden" class="" id="part_code">
+                    <input type="hidden" class="" id="qty">
+
+                    <!-- Hidden value -->
+                    <input type="hidden" class="" value="2" id="flag_type">
+                    <input type="hidden" class="" id="create_by">
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <button type="button" id="save_card_inf" class="btn btn-lg btn-success btn-block mt-2 btn-custom-size"><i class="ms-Icon ms-Icon--Save"></i></button>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <button type="reset" id="reset_inf" class="btn btn-lg btn-danger btn-block mt-4 btn-custom-size"><i class="ms-Icon ms-Icon--Reset"></i></button>
+                    </div>
+
+                </div>
+                <!-- End sector first-->
+                <!-- Sector second-->
+                <div class="col-sm-6">
+                    <h4>History Take out</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_takeout_history" style="font-size:0.6rem">
+                            <thead>
+                                <tr>
+                                    <th scope="col">TYPE</th>
+                                    <th scope="col">DATE</th>
+                                    <th scope="col">LOT EDP</th>
+                                    <th scope="col">MATERIAL</th>
+                                    <th scope="col">STORAGE LOCATION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end sector second-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            init_table_history_take_out();
+            $('#lot_regis').focus();
+            var table = $('#tb_takeout_history').DataTable();
+
+            function init_table_history_take_out() {
+                $('#tb_takeout_history').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '55vh',
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_take_out_scan_lotcard",
+                        //"url": "/Common/STRM/Operation/ajax_get_take_out_scan_lotcard",
+                        //"url": "/Operation/ajax_get_take_out_scan_lotcard",
+                        "datatype": "json"
+                    },
+                    createdRow: function (node, data) { //Before distibute data
+                        if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                            if (data.TYPE_TRAN_NAME = "TAKE OUT") {
+                                $('td', node).eq(0).addClass('highlight_font_take_out'); //Condtion before render
+                            }
+                        }
+                    },
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4], className: 'text-center', //Custom Condtion text-center
+                        },
+                        //{
+                        //    targets: [4, 5, 6, 7, 8], render: $.fn.dataTable.render.number(',') //Custom Condtion (,) value(int or float)
+                        //},
+                    ],
+                    "columns": [ // Init render data
+                        { data: "TYPE_TRAN_NAME", "name": "TYPE_TRAN_ID", "autoWidth": true },
+                        {
+                            data: "TAKE_OUT_DATE",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                        },
+                        { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                        { data: "MATNAME", "name": "MATNAME", "autoWidth": true },
+                        { data: "STORAGE_NAME_CONCAT", "name": "STORAGE_NAME_CONCAT", "autoWidth": true },
+                    ], // end columns
+                    "order": [[1, "desc"]]
+
+                });
+            }
+
+            $('#lot_regis').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $('#inf_card_regis').focus();
+                } else {
+
+                }
+            });
+
+            $('#inf_card_regis').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    var temp_part_code = '';
+                    var temp_qty = '';
+
+                    if ($("#part_code").val() == '' && $("#qty").val() == '') {
+                        temp_part_code = 'NONE';
+                        temp_qty = 0;
+                    }
+                    var conver_inf_card_value = parseInt($("#inf_card_regis").val());
+                    var take_out_value = {
+                        "LOT_NO": $("#lot_regis").val(),
+                        "PART_CODE": temp_part_code,
+                        "QTY": temp_qty,
+                        "TYPE_SYSTEM_ID": 2,
+                        "TYPE_TRAN_ID": 1,
+                        "LOC_ID": conver_inf_card_value,
+                        "CREATE_BY": "SYSTEM",
+                        "TAKE_OUT_BY": $("#temp_user").val(),
+                    }
+                    console.log(take_out_value);
+                    $.ajax({
+                        type: "POST",
+                        url: "./record_take_out_scan_lot_card",
+                        //url: "/Common/STRM/Operation/record_take_out_scan_lot_card",
+                        //url: "/Operation/record_take_out_scan_materiald",
+                        data: { take_out_value: take_out_value },
+                        datatype: "json",
+                        success: function (data) {
+                            swal({
+                                title: "Are you sure take out?",
+                                text: "Please inspect information before take out!",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            })
+                                .then((willDelete) => {
+                                    if (willDelete) {
+                                        swal({
+                                            title: "Take out success!",
+                                            text: "Thank you for record",
+                                            icon: "success",
+                                            //button: "OK!"
+                                            button: false,
+                                            timer: 2500
+                                        });
+                                        $('#lot_regis').val('');
+                                        $('#inf_card_regis').val('');
+                                        $('#lot_regis').focus();
+
+                                        $('#tb_takeout_history').DataTable().clear();
+                                        $('#tb_takeout_history').DataTable().ajax.reload();
+                                    } else {
+                                        swal({
+                                            title: "Take out cancle!",
+                                            text: "",
+                                            icon: "error",
+                                            //button: "OK!"
+                                            button: false,
+                                            timer: 3000
+                                        });
+
+                                        $('#lot_regis').focus();
+                                        $('#lot_regis').val('');
+                                        $('#inf_card_regis').val('');
+                                    }
+                                });
+                        },
+                        error: function (request, status, error) {
+                            swal({
+                                title: "Take out Failed!",
+                                text: "Please inspect information before take out",
+                                icon: "error",
+                                //button: "OK!"
+                                button: false,
+                                timer: 3000
+                            });
+                        }
+                    })
+                } else {
+
+                }
+            });
+
+
+            $('#save_card_inf').click(function () {
+                var temp_part_code = '';
+                var temp_qty = '';
+
+                if ($("#part_code").val() == '' && $("#qty").val() == '') {
+                    temp_part_code = 'NONE';
+                    temp_qty = 0;
+                }
+                var conver_inf_card_value = parseInt($("#inf_card_regis").val());
+                var take_out_value = {
+                    "LOT_NO": $("#lot_regis").val(),
+                    "PART_CODE": temp_part_code,
+                    "QTY": temp_qty,
+                    "TYPE_SYSTEM_ID": 2,
+                    "TYPE_TRAN_ID": 1,
+                    "LOC_ID": conver_inf_card_value,
+                    "CREATE_BY": "SYSTEM",
+                    "TAKE_OUT_BY": $("#temp_user").val(),
+                }
+                console.log(take_out_value);
+                $.ajax({
+                    type: "POST",
+                    url: "./record_take_out_scan_lot_card",
+                    //url: "/Common/STRM/Operation/record_take_out_scan_lot_card",
+                    //url: "/Operation/record_take_out_scan_materiald",
+                    data: { take_out_value: take_out_value },
+                    datatype: "json",
+                    success: function (data) {
+                        swal({
+                            title: "Are you sure take out?",
+                            text: "Please inspect information before take out!",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                            .then((willDelete) => {
+                                if (willDelete) {
+                                    swal({
+                                        title: "Take out success!",
+                                        text: "Thank you for record",
+                                        icon: "success",
+                                        //button: "OK!"
+                                        button: false,
+                                        timer: 3000
+                                    });
+                                    $('#lot_regis').val('');
+                                    $('#inf_card_regis').val('');
+                                    $('#lot_regis').focus();
+
+                                    $('#tb_takeout_history').DataTable().clear();
+                                    $('#tb_takeout_history').DataTable().ajax.reload();
+                                } else {
+                                    swal({
+                                        title: "Take out cancle!",
+                                        text: "",
+                                        icon: "error",
+                                        //button: "OK!"
+                                        button: false,
+                                        timer: 3000
+                                    });
+                                }
+                            });
+                    },
+                    error: function (request, status, error) {
+                        swal({
+                            title: "Take out Failed!",
+                            text: "Please inspect information before take out",
+                            icon: "error",
+                            //button: "OK!"
+                            button: false,
+                            timer: 3000
+                        });
+                    }
+                })
+            });
+
+            $('#reset_inf').click(function () {
+                $('#lot_regis').val('');
+                $('#inf_card_regis').val('')
+            });
+
+            $("#back_btn").click(function () {
+                window.history.back();
+            });
+
+        });
+    </script>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        .cards {
+            display: flex;
+            justify-content: space-between;
+            flex-basis: auto;
+            width: auto;
+        }
+
+        .card {
+            flex: 0 1 calc(25% - 1em);
+        }
+
+        .card-body {
+            padding: 7rem;
+        }
+
+        .card-body-custom {
+            padding: 4rem;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="centered">
+        <section class="cards">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body card-body-custom" id="card_register">
+                                <div class="text-center">
+                                    <img src="~/Content/pic/regis_wh-removebg-preview.png" class="rounded" alt="..." width="217" height="160">
+                                    <figcaption><h5><b>TAKE IN</b></h5></figcaption>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body card-body-custom" id="card_take_out">
+                                <div class="text-center">
+                                    <img src="~/Content/pic/take_out_wh-removebg-preview.png" class="rounded" alt="..." width="217" height="160">
+                                    <figcaption><h5><b>TAKE OUT</b></h5></figcaption>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 mt-2">
+                        <div class="card">
+                            <div class="card-body card-body-custom" id="card_search">
+                                <div class="text-center">
+                                    <img src="~/Content/pic/search_wh-removebg-preview.png" class="rounded" alt="..." width="217" height="160">
+                                    <figcaption><h5><b>FINDING</b></h5></figcaption>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 mt-2">
+                        <div class="card">
+                            <div class="card-body card-body-custom" id="card_report">
+                                <div class="text-center">
+                                    <img src="~/Content/pic/report_wh-removebg-preview.png" class="rounded" alt="..." width="217" height="160">
+                                    <figcaption><h5><b>REPORTS</b></h5></figcaption>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $("#card_register").click(function () {
+            window.location.href = "@Url.Action("register_view", "Operation")";
+        });
+
+        $("#card_take_out").click(function () {
+            window.location.href = "@Url.Action("take_out_view", "Operation")";
+        });
+
+        $("#card_search").click(function () {
+            window.location.href = "@Url.Action("finding_material_table", "Operation")";
+        });
+
+        $("#card_report").click(function () {
+            window.location.href = "@Url.Action("report", "Operation")";
+        });
+    });
+    </script>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

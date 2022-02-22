@@ -1,0 +1,306 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        .flexContainer {
+            display: flex;
+        }
+
+        .inputField {
+            flex: 1;
+        }
+
+        .form-control-custom {
+            font-size: 2rem;
+        }
+
+        .btn-custom-size {
+            font-size: 2rem;
+        }
+
+        .highlight_font_register {
+            background-color: #0071e3;
+            color: white;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="card text-center">
+        <div class="card-header">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+                <button type="button" class="btn btn-md btn-warning ml-3 " id="back_btn"><i class="ms-Icon ms-Icon--Back" style="color:white;"></i></button>
+                <h5><b style="color:forestgreen;">TAKE IN :</b> SCAN LOT CARD</h5>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center h-100">
+                <div class="col-sm-6">
+                    <!-- sector first-->
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="form-group">
+                            <label for="">Lot information</label>
+                            <input type="text" class="form-control form-control-custom text-center" id="lot_regis" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="form-group">
+                            <label for="">Location</label>
+                            <input type="text" class="form-control form-control-custom text-center" id="inf_card_regis" placeholder="">
+                        </div>
+                    </div>
+                    <input type="hidden" class="" id="part_code">
+                    <input type="hidden" class="" id="qty">
+
+                    <!-- Hidden value -->
+                    <input type="hidden" class="" value="2" id="flag_type">
+                    <input type="hidden" class="" id="create_by">
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <button type="button" id="save_card_inf" class="btn btn-lg btn-success btn-block mt-2 btn-custom-size"><i class="ms-Icon ms-Icon--Save"></i></button>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <button type="reset" id="reset_inf" class="btn btn-lg btn-danger btn-block mt-4 btn-custom-size"><i class="ms-Icon ms-Icon--Reset"></i></button>
+                    </div>
+
+                </div>
+                <!-- End sector first-->
+                <!-- Sector second-->
+                <div class="col-sm-6">
+                    <h4>History take in</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_register_history" style="font-size: 0.6rem">
+                            <thead>
+                                <tr>
+                                    <th scope="col">TYPE</th>
+                                    <th scope="col">DATE</th>
+                                    <th scope="col">LOT EDP</th>
+                                    <th scope="col">MATERIAL</th>
+                                    <th scope="col">STORAGE LOCATION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end sector second-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            init_table_history_register();
+            $('#lot_regis').focus();
+            var table_history = $('#tb_register_history').DataTable();
+
+            $('#lot_regis').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $('#inf_card_regis').focus();
+                } else {
+
+                }
+            });
+
+            $('#inf_card_regis').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    var temp_part_code = '';
+                    var temp_qty = '';
+
+                    if ($("#part_code").val() == '' && $("#qty").val() == '') {
+                        temp_part_code = 'NONE';
+                        temp_qty = 0;
+                    }
+                    var conver_inf_card_value = parseInt($("#inf_card_regis").val());
+                    var add_value = {
+                        "LOT_NO": $("#lot_regis").val(),
+                        "PART_CODE": temp_part_code,
+                        "QTY": temp_qty,
+                        "TYPE_SYSTEM_ID": 2,
+                        "TYPE_TRAN_ID": 2,
+                        "LOC_ID": conver_inf_card_value,
+                        "CREATE_BY": "SYSTEM",
+                        "REGISTER_BY": $("#temp_user").val(),
+                        //"REGISTER_BY": "ADMIN",
+
+                    }
+                    //console.log(add_value);
+                    $.ajax({
+                        type: "POST",
+                        url: "./record_register_scan_lotcard",
+                        //url: "/Common/STRM/Operation/record_register_scan_lotcard",
+                        //url: "/Operation/record_register_scan_lotcard",
+                        data: { add_value: add_value },
+                        datatype: "json",
+                        success: function (data) {
+                            swal({
+                                title: "Take in success!",
+                                text: "Thank you for record",
+                                icon: "success",
+                                //button: "OK!"
+                                button: false,
+                                timer: 3000
+                            });
+
+                            $('#lot_regis').val('');
+                            $('#inf_card_regis').val('');
+                            $('#lot_regis').focus();
+
+                            $('#tb_register_history').DataTable().clear();
+                            $('#tb_register_history').DataTable().ajax.reload();
+                        },
+                        error: function (request, status, error) {
+                            swal({
+                                title: "Take in Failed!",
+                                text: "Please inspect information before record",
+                                icon: "error",
+                                //button: "OK!"
+                                button: false,
+                                timer: 3000
+                            });
+                        }
+                    })
+
+                } else {
+
+                }
+            });
+
+            $('#save_card_inf').click(function () { //Manual save
+                var temp_part_code = '';
+                var temp_qty = '';
+
+                if ($("#part_code").val() == '' && $("#qty").val() == '') {
+                    temp_part_code = 'NONE';
+                    temp_qty = 0;
+                }
+                var conver_inf_card_value = parseInt($("#inf_card_regis").val());
+                var add_value = {
+                    "LOT_NO": $("#lot_regis").val(),
+                    "PART_CODE": temp_part_code,
+                    "QTY": temp_qty,
+                    "TYPE_SYSTEM_ID": 2,
+                    "TYPE_TRAN_ID": 2,
+                    "LOC_ID": conver_inf_card_value,
+                    "CREATE_BY": "SYSTEM",
+                    "REGISTER_BY": $("#temp_user").val(),
+                    //"REGISTER_BY": "ADMIN",
+
+                }
+                //console.log(add_value);
+                $.ajax({
+                    type: "POST",
+                    url: "./record_register_scan_lotcard",
+                    //url: "/Common/STRM/Operation/record_register_scan_lotcard",
+                    //url: "/Operation/record_register_scan_lotcard",
+                    data: { add_value: add_value },
+                    datatype: "json",
+                    success: function (data) {
+                        $('#lot_regis').val('');
+                        $('#inf_card_regis').val('');
+                        $('#lot_regis').focus();
+                        swal({
+                            title: "Take in success!",
+                            text: "Thank you for record",
+                            icon: "success",
+                            //button: "OK!"
+                            button: false,
+                            timer: 2500
+                        });
+                        $('#tb_register_history').DataTable().clear();
+                        $('#tb_register_history').DataTable().ajax.reload();
+                    },
+                    error: function (request, status, error) {
+                        swal({
+                            title: "Take in Failed!",
+                            text: "Please inspect information before record",
+                            icon: "error",
+                            //button: "OK!"
+                            button: false,
+                            timer: 3000
+                        });
+                    }
+                })
+            });
+
+            function init_table_history_register() {
+                $('#tb_register_history').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '55vh',
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_register_scan_lotcard",
+                        //"url": "/Common/STRM/Operation/ajax_get_register_scan_lotcard",
+                        //"url": "/Operation/ajax_get_register_scan_lotcard",
+                        "datatype": "json"
+                    },
+                    createdRow: function (node, data) { //Before distibute data
+                        if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                            if (data.TYPE_TRAN_NAME = "TAKE IN") {
+                                $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                            }
+                        }
+                    },
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4], className: 'text-center', //Custom Condtion text-center
+                        },
+                        //{
+                        //    targets: [4, 5, 6, 7, 8], render: $.fn.dataTable.render.number(',') //Custom Condtion (,) value(int or float)
+                        //},
+                    ],
+                    "columns": [ // Init render data
+                        { data: "TYPE_TRAN_NAME", "name": "TYPE_TRAN_ID", "autoWidth": true },
+                        {
+                            data: "REGISTER_DATE",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                        },
+                        { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                        { data: "MATNAME", "name": "MATNAME", "autoWidth": true },
+                        { data: "STORAGE_NAME_CONCAT", "name": "STORAGE_NAME_CONCAT", "autoWidth": true },
+
+                        //{ data: "STORAGE_NAME", "name": "LOC_ID", "autoWidth": true },
+                        //{ data: "STORAGE_NO", "name": "CREATE_BY", "autoWidth": true },
+                        //{ data: "STORAGE_ORDER_NO", "name": "CREATE_BY", "autoWidth": true },
+                    ], // end columns
+                    "order": [[1, "desc"]]
+                });
+            }
+
+            $('#reset_inf').click(function () {
+                $('#lot_regis').val('');
+                $('#inf_card_regis').val('')
+            });
+
+            $("#back_btn").click(function () {
+                window.history.back();
+            });
+
+        });
+    </script>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="435df5dbab6f4131a4fed7bc92c4e6e1" Name="Diagram1" ZoomLevel="55">
+        <EntityTypeShape EntityType="STRMModel.tb_biz" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_cord_image" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_flag" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_status" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_storage_auto_trackin" Width="1.5" PointX="2.75" PointY="4.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_storage_information" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_stroage_condition" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_temp_maual_data" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_transaction" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_type_storage" Width="1.5" PointX="6.75" PointY="7.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_type_storage_format" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="STRMModel.tb_type_tran" Width="1.5" PointX="2.75" PointY="8.75" />
+        <EntityTypeShape EntityType="STRMModel.sdt_member" Width="1.5" PointX="8.75" PointY="3.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

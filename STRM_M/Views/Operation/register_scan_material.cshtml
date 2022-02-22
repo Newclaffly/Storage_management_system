@@ -1,0 +1,750 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        .flexContainer {
+            display: flex;
+        }
+
+        .inputField {
+            flex: 1;
+        }
+
+        .form-control-custom {
+            font-size: 2rem;
+        }
+
+        .btn-custom-size {
+            font-size: 2rem;
+        }
+
+        .modal {
+            padding: 0 !important;
+        }
+
+            .modal .modal-dialog {
+                width: 100%;
+                max-width: none;
+                height: 100%;
+                margin: 0;
+            }
+
+            .modal .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+
+            .modal .modal-body {
+                overflow-y: auto;
+            }
+
+        .text-center-custom {
+            font-size: 1.0rem;
+            display: block;
+            text-align: center;
+            line-height: 150%;
+            color: #007bff;
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        .highlight_font_register {
+            background-color: #0071e3;
+            color: white;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="card text-center">
+        <div class="card-header">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+                <button type="button" class="btn btn-md btn-warning ml-3 " id="back_btn"><i class="ms-Icon ms-Icon--Back" style="color:white;"></i></button>
+                <h5><b style="color:forestgreen;">TAKE IN :</b> SELECT MATERIAL NAME</h5>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center h-100">
+                <div class="col-sm-6">
+                    <!-- sector first-->
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <label class="text-center" for="">Input Material name</label>
+                        <div class="input-group">
+                            <input type="hidden" class="" id="material_code">
+                            <input type="text" class="form-control form-control-custom" id="material_name" placeholder="" aria-label="" aria-describedby="button-addon2">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-primary" href="@Url.Action("", "")" id="" data-toggle="modal" data-target="#modal_select_mat">
+                                    <i class="ms-Icon ms-Icon--Dialpad"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11 mt-4">
+                        <div class="form-group">
+                            <label class="text-center">Input Qty</label>
+                            <input type="text" class="form-control form-control-custom" id="qty" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11 mt-4">
+                        <div class="form-group">
+                            <label for="">Location</label>
+                            <input type="text" class="form-control form-control-custom" id="inf_card_regis" placeholder="">
+                        </div>
+                    </div>
+                    <input type="hidden" class="" id="lot_inf">
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <button type="button" class="btn btn-lg btn-success btn-block mt-2 btn-custom-size" id="save_list_matname"><i class="ms-Icon ms-Icon--Save"></i></button>
+                    </div>
+
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <button type="button" class="btn btn-lg btn-danger btn-block mt-4 btn-custom-size" id="reset_inf"><i class="ms-Icon ms-Icon--Reset"></i></button>
+                    </div>
+
+                </div>
+                <!-- End sector first-->
+                <!-- Sector second-->
+                <div class="col-sm-6 col-md-6">
+                    <h4>History take in</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_register_material_name" style="font-size:0.6rem">
+                            <thead>
+                                <tr>
+                                    <th scope="col">TYPE</th>
+                                    <th scope="col">DATE</th>
+                                    <th scope="col">LOT EDP</th>
+                                    <th scope="col">MATERIAL</th>
+                                    <th scope="col">STORAGE LOCATION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end sector second-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            init_table_material_name_regis();
+            $('#lot_no_regis').focus();
+            var table = $('#tb_register_material_name').DataTable();
+
+            function init_table_material_name_regis() {
+                $('#tb_register_material_name').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '55vh',
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_register_scan_lotcard",
+                        //"url": "/Common/STRM/Operation/ajax_get_register_scan_lotcard",
+                        //"url": "/Operation/ajax_get_register_scan_lotcard",
+                        "datatype": "json"
+                    },
+                    createdRow: function (node, data) { //Before distibute data
+                        if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                            if (data.TYPE_TRAN_NAME = "TAKE IN") {
+                                $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                            }
+                        }
+                    },
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4], className: 'text-center', //Custom Condtion text-center
+                        },
+                    ],
+                    "columns": [ // Init render data
+                        { data: "TYPE_TRAN_NAME", "name": "TYPE_TRAN_ID", "autoWidth": true },
+                        {
+                            data: "REGISTER_DATE",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                        },
+                        { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                        { data: "MATNAME", "name": "PART_CODE", "autoWidth": true },
+                        { data: "STORAGE_NAME_CONCAT", "name": "STORAGE_NAME_CONCAT", "autoWidth": true },
+                    ], // end columns
+                    "order": [[1, "desc"]]
+
+                });
+            }
+
+            function init_table_fillter_material(para_matgroup) {
+                console.log(para_matgroup);
+                $('#tb_fillter_material').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '70vh',
+                    "scrollCollapse": true,
+                    "responsive": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_register_scan_materiald",
+                        //"url": "/Common/STRM/Operation/ajax_get_register_scan_materiald",
+                        //"url": "/Operation/ajax_get_register_scan_materiald",
+                        "data": { 'param_name': para_matgroup },
+                        "datatype": "json"
+                    },
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4, 5], className: 'text-center', //Custom Condtion text-center
+                        },
+                    ],
+                    "columns": [ // Init render data
+                        { data: "BIZ_NAME", "name": "BIZ_NAME", "autoWidth": true },
+                        { data: "CAT_TYPE", "name": "CAT_TYPE", "autoWidth": true },
+                        { data: "MATGROUP", "name": "MATGROUP", "autoWidth": true },
+                        { data: "MATCODE", "name": "MATCODE", "autoWidth": true },
+                        { data: "MATNAME", "name": "MATNAME", "autoWidth": true },
+                        {//Render button packdata
+                            "render": function (data, type, Me, meta) {
+                                return '<button type="button" class="btn btn-sm btn-outline-success btn_selcect_material_name_list" aria-hidden="true"  data-toggle="modal" data-target="#myModal_edit" ' +
+                                    'data-biz-name ="' + Me.BIZ_NAME + '" data-cat-type ="' + Me.CAT_TYPE + '" data-matgroup ="' + Me.MATGROUP + '" data-matcode ="' + Me.MATCODE + '"  data-matname ="' + Me.MATNAME + '" ' +
+                                    '><i class="ms-Icon ms-Icon--Accept"></i></button>';
+                            }
+                            , "autoWidth": true
+                        },
+                    ], // end columns
+                });
+            }
+
+            $(document).on("click", ".btn_selcect_material_name_list", function () {
+                $("#material_name").val('');
+                $("#material_code").val('');
+
+                var get_matcode = $(this).data('matcode');
+                var get_matname = $(this).data('matname');
+                $('#modal_fillter_material').modal('hide');
+                $('#modal_select_mat').modal('hide');
+
+                $("#material_name").val(get_matname);
+                $("#material_code").val(get_matcode);
+                $('#qty').focus();
+            });
+
+            $('#inf_card_regis').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    var temp_lot = '';
+
+                    if ($("#lot_inf").val() == '') {
+                        temp_lot = 'NONE';
+                    }
+                    var conver_inf_card_value = parseInt($("#inf_card_regis").val());
+                    var add_value_mat = {
+                        "LOT_NO": temp_lot,
+                        "PART_CODE": $("#material_code").val(),
+                        "QTY": $("#qty").val(),
+                        "TYPE_SYSTEM_ID": 1,
+                        "TYPE_TRAN_ID": 2,
+                        "LOC_ID": conver_inf_card_value,
+                        "CREATE_BY": "SYSTEM",
+                        "REGISTER_BY": $("#temp_user").val(),
+                      /*  "REGISTER_BY": "ADMIN",*/
+
+                    }
+                    //console.log(add_value_mat);
+                    $.ajax({
+                        type: "POST",
+                        url: "./record_register_scan_materiald",
+                        //url: "/Common/STRM/Operation/record_register_scan_materiald",
+                        //url: "/Operation/record_register_scan_materiald",
+                        data: { add_value_mat: add_value_mat },
+                        datatype: "json",
+                        success: function (data) {
+                            swal({
+                                title: "Take in success!",
+                                text: "Thank you for record",
+                                icon: "success",
+                                //button: "OK!"
+                                button: false,
+                                timer: 2500
+                            });
+                            $('#material_name').val('');
+                            $("#inf_card_regis").val('');
+                            $('#material_code').val('');
+                            $('#qty').val('');
+                            $('#material_code').focus();
+
+                            $('#tb_register_material_name').DataTable().clear();
+                            $('#tb_register_material_name').DataTable().ajax.reload();
+                        },
+                        error: function (request, status, error) {
+                            swal({
+                                title: "Take in Failed!",
+                                text: "Please inspect information before record",
+                                icon: "error",
+                                //button: "OK!"
+                                button: false,
+                                timer: 3000
+                            });
+                        }
+                    })
+                } else {
+
+                }
+            });
+
+            $('#save_list_matname').click(function () {
+                var temp_lot = '';
+
+                if ($("#lot_inf").val() == '') {
+                    temp_lot = 'NONE';
+                }
+                var conver_inf_card_value = parseInt($("#inf_card_regis").val());
+                var add_value_mat = {
+                    "LOT_NO": temp_lot,
+                    "PART_CODE": $("#material_code").val(),
+                    "QTY": $("#qty").val(),
+                    "TYPE_SYSTEM_ID": 1,
+                    "TYPE_TRAN_ID": 2,
+                    "LOC_ID": conver_inf_card_value,
+                    "CREATE_BY": "SYSTEM",
+                    "REGISTER_BY": $("#temp_user").val(),
+                    //"REGISTER_BY": "ADMIN",
+
+                }
+                console.log(add_value_mat);
+                $.ajax({
+                    type: "POST",
+                    url: "./record_register_scan_materiald",
+                    //url: "/Common/STRM/Operation/record_register_scan_materiald",
+                    //url: "/Operation/record_register_scan_materiald",
+                    data: { add_value_mat: add_value_mat },
+                    datatype: "json",
+                    success: function (data) {
+                        swal({
+                            title: "Take in success!",
+                            text: "Thank you for record",
+                            icon: "success",
+                            //button: "OK!"
+                            button: false,
+                            timer: 3000
+                        });
+                        $('#material_name').val('');
+                        $("#inf_card_regis").val('');
+                        $('#material_code').val('');
+                        $('#qty').val('');
+                        $('#material_code').focus();
+
+                        $('#tb_register_material_name').DataTable().clear();
+                        $('#tb_register_material_name').DataTable().ajax.reload();
+                    },
+                    error: function (request, status, error) {
+                        swal({
+                            title: "Take in Failed!",
+                            text: "Please inspect information before record",
+                            icon: "error",
+                            //button: "OK!"
+                            button: false,
+                            timer: 3000
+                        });
+                    }
+                })
+            });
+
+            $('#reset_inf').click(function () {
+                $('#material_name').val('');
+                $('#material_code').val('');
+                $('#qty').val('')
+                $("#inf_card_regis").val('');
+            });
+
+            $("#COVER_GLASS").click(function () {
+                var para_matgroup = 'COVER GLASS'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#FLEXIBLE_PRINTED_CIRCUIT").click(function () {
+                var para_matgroup = 'FLEXIBLE PRINTED CIRCUIT'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#FRAME").click(function () {
+                var para_matgroup = 'FRAME'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#LIQUID_CRYSTAL_PANEL").click(function () {
+                var para_matgroup = 'LIQUID CRYSTAL PANEL'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#SHADING_MASK").click(function () {
+                var para_matgroup = 'SHADING MASK'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#ALUMINIUM_BAG").click(function () {
+                var para_matgroup = 'ALUMINIUM BAG'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#CARTON").click(function () {
+                var para_matgroup = 'CARTON'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#CONDUCTIVE_FILM").click(function () {
+                var para_matgroup = 'CONDUCTIVE FILM'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#CUSHION_SHEET").click(function () {
+                var para_matgroup = 'CUSHION SHEET'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#DESICCANT").click(function () {
+                var para_matgroup = 'DESICCANT'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#LABEL").click(function () {
+                var para_matgroup = 'LABEL'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#PP_TAPE").click(function () {
+                var para_matgroup = 'PP TAPE'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#SEALING_RESIN").click(function () {
+                var para_matgroup = 'SEALING RESIN'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#SEALING_TAPE").click(function () {
+                var para_matgroup = 'SEALING TAPE'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#SOLVENT").click(function () {
+                var para_matgroup = 'SOLVENT'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#BASE_FILM").click(function () {
+                var para_matgroup = 'BASE FILM'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#COVER_FILM").click(function () {
+                var para_matgroup = 'COVER FILM'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#INK").click(function () {
+                var para_matgroup = 'INK'
+                init_table_fillter_material(para_matgroup);
+                $('#modal_fillter_material').modal('show');
+            });
+
+            $("#back_btn").click(function () {
+                window.history.back();
+            });
+        });
+    </script>
+    <!-- Modal -->
+    <div class="modal hide" tabindex="-1" role="dialog" id="modal_select_mat" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header pt-1 pb-1">
+                    <div class="col col-lg-4">
+                        <h3 class="modal-title"> Material group list</h3>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="destroyModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col col-sm-12">
+                            <h5 class="modal-title">Direct Material</h5>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <!-- ./ Direct material-->
+                        <div class="row mt-2">
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="COVER_GLASS">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">COVER GLASS</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="FLEXIBLE_PRINTED_CIRCUIT">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">FLEXIBLE PRINTED CIRCUIT</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="FRAME">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">FRAME</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h4 class="card-title" id="LIQUID_CRYSTAL_PANEL">
+                                            <label class="text-center-custom" href="#">LIQUID CRYSTAL PANEL</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="SHADING_MASK">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">SHADING MASK</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <h5 class="modal-title">Indirect Material</h5>
+                            </div>
+                        </div>
+                        <!-- ./ Indirect material-->
+                        <div class="row mt-2">
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="ALUMINIUM_BAG">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom">ALUMINIUM BAG</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="CARTON">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">CARTON</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="CONDUCTIVE_FILM">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">CONDUCTIVE FILM</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="CUSHION_SHEET">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">CUSHION SHEET</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="DESICCANT">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">DESICCANT</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="LABEL">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">LABEL</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="PP_TAPE">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">PP TAPE</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="SEALING_RESIN">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">SEALING RESIN</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="SEALING_TAPE">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">SEALING TAPE</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="SOLVENT">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">SOLVENT</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <h5 class="modal-title">Wasting Material</h5>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="BASE_FILM">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">BASE FILM</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="COVER_FILM">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">COVER FILM</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body" id="INK">
+                                        <h4 class="card-title">
+                                            <label class="text-center-custom" href="#">INK</label>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div> <!--./modal body-->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-light" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="btn btn-sm btn-btn btn-primary">Select</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal hide" tabindex="-1" role="dialog" id="modal_fillter_material" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header pt-1 pb-1">
+                    <div class="col col-lg-4">
+                        <h3 class="modal-title"> Material name list</h3>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="destroyModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_fillter_material">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">BIZ NAME</th>
+                                        <th scope="col">CAT TYPE</th>
+                                        <th scope="col">MATGROUP</th>
+                                        <th scope="col">MATCODE</th>
+                                        <th scope="col">MATNAME</th>
+                                        <th scope="col">TOOLS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-light" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

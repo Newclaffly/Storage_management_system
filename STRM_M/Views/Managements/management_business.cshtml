@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+<style>
+    .flexContainer {
+        display: flex;
+    }
+
+    .inputField {
+        flex: 1;
+    }
+
+    .form-control-custom {
+        font-size: 2rem;
+    }
+
+    .btn-custom-size {
+        font-size: 2rem;
+    }
+</style>
+<div class="card text-center">
+    <div class="card-header">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+            <button type="button" class="btn btn-lg btn-warning ml-3" id="back_btn"><i class="ms-Icon ms-Icon--Back" style="color:white;"></i></button>
+            <h5 class="">Maintain buiness information</h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <button type="button" class="btn btn-sm btn-lg btn-primary ml-3" aria-hidden="true"  data-toggle="modal" data-target="#myModal_add"  id="ma_new_biz"><i class="ms-Icon ms-Icon--Add" style="color:white;"></i> Add data</button>
+
+        <div class="row align-items-center h-100">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-custom table-bordered mb-0 table-custom" id="tb_ma_business">
+                        <thead>
+                            <tr>
+                                <th scope="col">BIZ ID</th>
+                                <th scope="col">BIZ NAME</th>
+                                <th scope="col">BIZ PROCESS</th>
+                                <th scope="col">UPDATE BY</th>
+                                <th scope="col">UPDATE DATE</th>
+                                <th scope="col">TOOLS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        init_table_ma_business();
+
+        function init_table_ma_business() {
+            $('#tb_ma_business').DataTable({
+                "destroy": true,
+                "searching": true,
+                "lengthChange": false,
+                "paging": false,
+                "bInfo": false,
+                "stateSave": false,
+                "scrollY": '60vh',
+                "scrollCollapse": true,
+                "lengthChange": false,
+                "ajax": {
+                    "type": "POST",
+                    "url": "./ajax_getmanagement_business",
+                    //"url": "/Common/STRM/Managements/ajax_getmanagement_business",
+                    //"url": "/Managements/ajax_getmanagement_business",
+                    "datatype": "json"
+                },
+                //createdRow: function (node, data) { //Before distibute data
+                //    if (data.REMAIN_INLINE < 0) {
+                //        $('td', node).eq(4).addClass('highlight_font_red'); //Condtion before render
+                //    }
+                //    if (data.DIFF < 0) {
+                //        $('td', node).eq(5).addClass('highlight_font_red'); //Condtion before render
+                //    }
+                //},
+                
+                columnDefs: [
+                    {
+                        targets: [0, 1, 2, 3, 4, 5], className: 'text-center', //Custom Condtion text-center
+                    },
+                    //{
+                    //    targets: [4, 5, 6, 7, 8], render: $.fn.dataTable.render.number(',') //Custom Condtion (,) value(int or float)
+                    //},
+                ],
+                "columns": [ // Init render data
+                    { data: "BIZ_ID", "name": "BIZ_ID", "autoWidth": true },
+                    { data: "BIZ_NAME", "name": "BIZ_NAME", "autoWidth": true },
+                    { data: "BIZ_PROCESS", "name": "BIZ_PROCESS", "autoWidth": true },
+                    { data: "UPDATE_BY", "name": "UPDATE_BY", "autoWidth": true },
+                    //{ data: "UPDATE_DATE", "name": "UPDATE_DATE", "autoWidth": true },
+                    {
+                        data: "UPDATE_DATE",
+                        "render": function (value) {
+                            if (value === null) return "";
+                            var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+
+                            //return moment(value).format('YYYY-MM-DD HH:mm:ss');
+                            return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                    },
+                    {//Render button packdata
+                        "render": function (data, type, Me, meta) {
+                            return '<button type="button" class="btn btn-sm btn-warning edit_ma_business" aria-hidden="true"  data-toggle="modal" data-target="#myModal_edit" ' +
+                                'data-biz_id ="' + Me.BIZ_ID + '" data-biz_name ="' + Me.BIZ_NAME + '" data-biz_process ="' + Me.BIZ_PROCESS + '" ' +
+                                '><i class="ms-Icon ms-Icon--Edit"></i></button> ' +
+
+                                '<button type="button" class="btn btn-sm btn-danger mr-2 delete_ma_business" style="color:white;" aria-hidden="true" data-toggle="modal" data-target="#myModal_deleted" ' +
+                                'data-biz_id ="' + Me.BIZ_ID + '" data-biz_name ="' + Me.BIZ_NAME + '" data-biz_process ="' + Me.BIZ_PROCESS + '" ' +
+                                '><i class="ms-Icon ms-Icon--Delete"></i></button>';
+                        }
+                        , "autoWidth": true
+                    },
+                ], // end columns
+            });
+        }
+
+        $("#back_btn").click(function () {
+            window.history.back();
+        });
+
+        $(document).on("click", ".edit_ma_business", function () {
+            var get_biz_id = $(this).data('biz_id');
+            var get_biz_name = $(this).data('biz_name');
+            var get_biz_process = $(this).data('biz_process');
+
+            $(".modal-body #edit_biz_id").val(get_biz_id);
+            $(".modal-body #edit_biz_name").val(get_biz_name);
+            $(".modal-body #edit_biz_process").val(get_biz_process);
+       
+        });
+
+    });
+</script>
+
+<div class="modal fade" id="myModal_edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Windows edit business</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>BIZ ID</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="edit_biz_id" readonly />
+                </div>
+                <label>BIZ NAME</label>
+                <input type="text" class="form-control" id="edit_biz_name" />
+                <label>BIZ PROCESS</label>
+                <input type="text" class="form-control" id="edit_biz_process" />
+
+                @* Hidden Value*@
+                <input type="hidden" class="form-control" id="edit_biz_id" />
+                <input type="hidden" class="form-control" value="SYSTEM" id="edit_biz_by" />
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="save_edit">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal_add" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Windows add business</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>BIZ NAME</label>
+                <input type="text" class="form-control" id="add_biz_name" />
+                <label>BIZ PROCESS</label>
+                <input type="text" class="form-control" id="add_biz_process" />
+                @* Hidden Value*@
+                <input type="hidden" class="form-control" value="SYSTEM" id="biz_by" />
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="save_add">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

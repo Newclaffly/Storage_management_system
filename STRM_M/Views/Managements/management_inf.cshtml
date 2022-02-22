@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+<style>
+    .cards {
+        display: flex;
+        justify-content: space-between;
+        flex-basis: auto;
+        width: auto;
+    }
+
+    .card {
+        flex: 0 1 calc(25% - 1em);
+    }
+
+    .card-body {
+        padding: 7rem;
+    }
+</style>
+<button type="button" class="btn btn-sm btn-warning ml-3 " id="back_btn"><i class="ms-Icon ms-Icon--Back" style="color:white;"></i></button>
+<div class="centered">
+    <section class="cards">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-4 mt-4">
+                    <div class="card">
+                        <div class="card-body" id="ma_business">
+                            <h5 class="card-title text-center">Business information</h5>
+                            @*<p class="card-text text-center">With supporting text below as a natural lead-in to additional content.</p>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mt-4">
+                    <div class="card">
+                        <div class="card-body" id="">
+                            <h5 class="card-title text-center">Type storage information</h5>
+                            @*<p class="card-text text-center">With supporting text below as a natural lead-in to additional content.</p>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mt-4">
+                    <div class="card">
+                        <div class="card-body" id="storage_inf">
+                            <h5 class="card-title text-center">Storage information</h5>
+                            @*<p class="card-text text-center">With supporting text below as a natural lead-in to additional content.</p>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 mt-4">
+                    <div class="card">
+                        <div class="card-body" id="">
+                            <h5 class="card-title text-center">Type transaction</h5>
+                            @*<p class="card-text text-center">With supporting text below as a natural lead-in to additional content.</p>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mt-4">
+                    <div class="card">
+                        <div class="card-body" id="">
+                            <h5 class="card-title text-center">Status information</h5>
+                            @*<p class="card-text text-center">With supporting text below as a natural lead-in to additional content.</p>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mt-4">
+                    <div class="card">
+                        <div class="card-body" id="">
+                            <h5 class="card-title text-center">Flag information</h5>
+                            @*<p class="card-text text-center">With supporting text below as a natural lead-in to additional content.</p>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#regis_lotcard").click(function () {
+            window.location.href = "@Url.Action("", "")";
+        });
+
+        $("#ma_business").click(function () {
+            window.location.href = "@Url.Action("management_business", "Managements")";
+        });
+
+        $("#storage_inf").click(function () {
+            window.location.href = "@Url.Action("management_storage_inf", "Managements")";
+        });
+
+        $("#back_btn").click(function () {
+            window.history.back();
+        });
+    });
+</script>

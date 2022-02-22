@@ -1,0 +1,308 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        #table-custom th, td {
+            color: black;
+        }
+
+        #table-custom {
+            font-size: 0.58rem;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom">
+        <h5 class="mr-2">HOLD LOT SUMMARY UPDATE DATE: @DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")</h5>
+    </div>
+    <div class="col-sm-6">
+        <div class="table-responsive mt-2">
+            <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_hold_lot_summary" style="font-size:0.60rem;">
+                <thead>
+                    <tr>
+                        <th scope="col">TOTAL HOLD</th>
+                        <th scope="col" style="background-color:mediumseagreen; color:white;">FOUND</th>
+                        <th scope="col">NOT FOUND</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom mt-4">
+        <h5 class="mr-2">
+            LOT LIST IN SYSTEM UPDATE DATE: @DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")
+            <button class="btn btn-sm btn-success ms-Icon ms-Icon--ExcelDocument ml-2" id="export_excel_lot_hold_list">    EXPORT</button>
+
+        </h5>
+    </div>
+    <div class="col-sm-12">
+        <div class="table-responsive mt-2">
+            <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_find_history" style="font-size:0.60rem;">
+                <thead>
+                    <tr>
+                        <th scope="col">TYPE</th>
+                        <th scope="col">DATE</th>
+                        <th scope="col">LOT EDP</th>
+                        <th scope="col">MATERIAL</th>
+                        <th scope="col">OPE NAME</th>
+                        <th scope="col">MAN NAME</th>
+                        <th scope="col">QTY</th>
+                        <th scope="col">HOLD EMP</th>
+                        <th scope="col">HOLD DESC</th>
+                        <th scope="col">STORAGE LOCATION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom mt-4">
+        <h5 class="mr-2">HOLD LOT UPDATE DATE: @DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")</h5>
+    </div>
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_hold_lot_verify" style="font-size:0.60rem;">
+            <thead>
+                <tr>
+                    <th scope="col">LOT EDP</th>
+                    <th scope="col">LOT HOLD STA</th>
+                    <th scope="col">LOT HOLD ITM</th>
+                    <th scope="col">HOLD EMP</th>
+                    <th scope="col">UPDATE DATE</th>
+                    <th scope="col">UPDATE EMP</th>
+                    <th scope="col">HOLD DESC</th>
+                    <th scope="col">REASON CODE</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            init_table_hold_lot_verify();
+            init_table_hold_lot_summary();
+            init_table_find_history();
+            var table_find_history = $('#tb_find_history').DataTable();
+            var table = $('#tb_hold_lot_verify').DataTable();
+            var table_tb_hold_lot_summary = $('#tb_hold_lot_summary').DataTable();
+
+            function init_table_hold_lot_summary() {
+                $('#tb_hold_lot_summary').DataTable({
+                    "destroy": true,
+                    "searching": false,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '30vh',
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_all_lot_tracking_summary",
+
+                        //"url": "/Common/STRM/Operation/ajax_get_all_lot_tracking_summary",
+                        //"url": "/Operation/ajax_get_all_lot_tracking_summary",
+                        "datatype": "json"
+                    },
+                    //createdRow: function (node, data) { //Before distibute data
+                    //    if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                    //        if (data.TYPE_TRAN_NAME = "REGISTER") {
+                    //            $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                    //        }
+                    //    }
+                    //},
+
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2], className: 'text-center', //Custom Condtion text-center
+                        },
+                        {
+                            targets: [0, 1, 2], render: $.fn.dataTable.render.number(',') //Custom Condtion (,) value(int or float)
+                        },
+                    ],
+                    "columns": [ // Init render data
+                        { data: "TOTAL_HOLD", "name": "TOTAL_HOLD", "autoWidth": true },
+                        { data: "HOLD_FOUND", "name": "HOLD_FOUND", "autoWidth": true },
+                        { data: "HOLD_NOT_FOUND", "name": "HOLD_NOT_FOUND", "autoWidth": true },
+
+                    ], // end columns
+                });
+            }
+
+            function init_table_hold_lot_verify() {
+                $('#tb_hold_lot_verify').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '60vh',
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_all_lot_tracking",
+                        /*"url": "/Common/STRM/Operation/ajax_get_all_lot_tracking",*/
+                        //"url": "/Operation/ajax_get_all_lot_tracking",
+                        "datatype": "json"
+                    },
+                    //createdRow: function (node, data) { //Before distibute data
+                    //    if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                    //        if (data.TYPE_TRAN_NAME = "REGISTER") {
+                    //            $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                    //        }
+                    //    }
+                    //},
+
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4, 5, 6, 7], className: 'text-center', //Custom Condtion text-center
+                        },
+                    ],
+                    "columns": [ // Init render data
+                        { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                        { data: "LOT_HOLD_STA", "name": "LOT_HOLD_STA", "autoWidth": true },
+                        { data: "LOT_HOLD_ITM", "name": "LOT_HOLD_ITM", "autoWidth": true },
+                        { data: "HOLD_EMP", "name": "HOLD_EMP", "autoWidth": true },
+                        {
+                            data: "UPDATE_DATE",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                        },
+                        { data: "UPDATE_EMP", "name": "UPDATE_EMP", "autoWidth": true },
+                        { data: "HOLD_DESC", "name": "HOLD_DESC", "autoWidth": true },
+                        { data: "REASON_CODE", "name": "REASON_CODE", "autoWidth": true },
+
+                    ], // end columns
+                    "order": [[4, "desc"]]
+
+                });
+            }
+
+            function init_table_find_history() {
+                $('#tb_find_history').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '30vh',
+                    "scrollCollapse": true,
+                    "lengthChange": false,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_all_tran",
+                        //"url": "/Common/STRM/Operation/ajax_get_all_tran",
+                        //"url": "/Operation/ajax_get_all_tran",
+                        "datatype": "json"
+                    },
+                    createdRow: function (node, data) { //Before distibute data
+                        if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                            if (data.TYPE_TRAN_NAME = "TAKE IN") {
+                                $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                            }
+                        }
+                    },
+
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4, 5, 6, 7, 8 ,9], className: 'text-center', //Custom Condtion text-center
+                        },
+                    ],
+                    "columns": [ // Init render data
+                        { data: "TYPE_TRAN_NAME", "name": "TYPE_TRAN_NAME", "autoWidth": true },
+                        {
+                            data: "REGISTER_DATE",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                        },
+                        { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                        { data: "MATNAME", "name": "MATNAME", "autoWidth": true },
+                        { data: "OPE_NAME", "name": "OPE_NAME", "autoWidth": true },
+                        { data: "MAN_NAME", "name": "MAN_NAME", "autoWidth": true },
+                        { data: "QUANTITY_CURRENT", "name": "QUANTITY_CURRENT", "autoWidth": true },
+                        { data: "HOLD_EMP", "name": "HOLD_EMP", "autoWidth": true },
+                        { data: "HOLD_DESC", "name": "HOLD_DESC", "autoWidth": true },
+                        { data: "STORAGE_NAME_CONCAT", "name": "STORAGE_NAME_CONCAT", "autoWidth": true },
+                    ], // end columns
+                    "order": [[1, "desc"]]
+
+                });
+            }
+
+            $(document).on("click", "#export_excel_lot_hold_list", function () {
+                //var get_req_id = $(this).data('id');
+                $.confirm({
+                    title: 'Export Excel?',
+                    content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
+                    autoClose: 'cancelAction|8000',
+                    type: 'green',
+                    typeAnimated: true,
+                    buttons: {
+                        deleteUser: {
+                            text: 'Export from',
+                            btnClass: 'btn-green',
+                            action: function () {
+                                //$.alert('Export the from Business. ' + $('#biz_selected option:selected').val() + ' completed! ');
+                                $.ajax({
+                                    type: "POST",
+                                    url: "./Export_excel_lot_hold_list",
+                                    //url: "/Common/STRM/Operation/Export_excel_lot_hold_list",
+                                    data: '',
+                                    dataType: "json",
+                                    success: function (data) {
+                                        var bytes = new Uint8Array(data.FileContents);
+                                        var blob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                                        var link = document.createElement("a");
+                                        link.href = window.URL.createObjectURL(blob);
+                                        link.download = "Lot_hold_list.xlsx";
+                                        link.click();
+                                    },
+                                    error: function (err) {
+                                        console.log(err);
+                                    }
+                                });
+                            }
+                        },
+                        cancelAction: function () {
+                            $.alert('Action is canceled');
+                        }
+                    }
+                });
+            });
+
+
+            $("#back_btn").click(function () {
+                window.history.back();
+            });
+
+        });
+    </script>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

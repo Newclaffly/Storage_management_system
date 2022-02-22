@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        .cards {
+            display: flex;
+            justify-content: space-between;
+            flex-basis: auto;
+            width: auto;
+        }
+
+        .card {
+            flex: 0 1 calc(25% - 1em);
+        }
+
+        .card-body {
+            padding: 7rem;
+        }
+
+        .card-body-custom {
+            padding: 4rem;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+        <button type="button" class="btn btn-md btn-warning ml-3 " id="back_btn"><i class="ms-Icon ms-Icon--Back" style="color:white;"></i></button>
+        <h5 class="" style="color:red;"><b>TAKE OUT</b></h5>
+    </div>
+    <div class="centered">
+        <section class="cards">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card mt-3">
+                            <div class="card-body" id="take_out_lotcard">
+                                <h5 class="card-title text-center"><b>SCAN LOT CARD</b></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mt-4">
+                        <div class="card">
+                            <div class="card-body" id="take_out_matname">
+                                <h5 class="card-title text-center"><b>SELECT MATERIALS</b></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $("#take_out_lotcard").click(function () {
+            window.location.href = "@Url.Action("take_out_scan_lotcard", "Operation")";
+        });
+
+        $("#take_out_matname").click(function () {
+            window.location.href = "@Url.Action("take_out_scan_material", "Operation")";
+        });
+
+        $("#back_btn").click(function () {
+            window.history.back();
+        });
+    });
+    </script>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

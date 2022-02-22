@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+<style>
+    #table-custom td {
+        color: black;
+    }
+
+    .dataTable thead .sorting_asc,
+    .dataTable thead .sorting_desc,
+    .dataTable thead .sorting {
+        padding-left: 2.2rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    #table-custom {
+        font-size: 0.55rem;
+    }
+
+    .highlight_font_register {
+        background-color: #0071e3;
+        color: white;
+        font-weight: bold;
+    }
+
+    .highlight_font_takeout {
+        background-color: #e34140;
+        color: white;
+        font-weight: bold;
+    }
+
+    body {
+        background-color: #ffffff;
+    }
+</style>
+@*<input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />*@
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom">
+    <h5 class="mr-2">TRANSACTION STORAGE UPDATE DATE: @DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")</h5>
+</div>
+<!-- CONTENT SEARCHING -->
+<div class="row justify-content-start  mt-3">
+    <div class="col-sm-3">
+        <lable>BIZ</lable>
+        <select class="form-control form-control-sm" id="biz_selected">
+            <option value=''>ALL</option>
+            <option value=''>IS</option>
+            <option value='' selected='selected'>HTPS</option>
+            <option value=''>M-OLED</option>
+        </select>
+    </div>
+    <div class="col-sm-3">
+            <lable>STORAGE</lable>
+            <select class="form-control form-control-sm" id="storage_concat_select">
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <lable>LOT EDP</lable>
+            <select class="form-control form-control-sm" id="lot_edp_select">
+            </select>
+        </div>
+    @*<div class="col-sm-3">
+            <lable>DATE</lable>
+            <input type="text" class="form-control form-control-sm" id="date_select">
+        </div>
+        <div class="col-sm-3">
+            <lable>LOT EDP</lable>
+            <input type="text" class="form-control form-control-sm" id="lot_edp_select">
+        </div>
+        <div class="col-sm-3">
+            <lable>MATERIAL NAME</lable>
+            <input type="text" class="form-control form-control-sm" id="matname_select">
+        </div>
+        <div class="col-sm-3">
+            <lable>STORAGE TYPE</lable>
+            <input type="text" class="form-control form-control-sm" id="store_type_select">
+        </div>
+        <div class="col-sm-3">
+            <lable>STORAGE NO</lable>
+            <input type="text" class="form-control form-control-sm" id="store_number_select">
+        </div>*@
+    @*<div class="col-sm-3 d-flex align-items-center mt-3">
+            <button class="btn btn-sm btn-danger  ms-Icon ms-Icon--Reset" id="reset">  RESETS</button>
+            <button class="btn btn-sm btn-success ms-Icon ms-Icon--ExcelDocument ml-2" id="export_excel_lot_hold_list">    EXPORT</button>
+        </div>*@
+</div>
+<!-- END CONTENT SEARCHING -->
+
+<div class="table-responsive mt-2">
+    <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_find_history" style="font-size:0.73em;">
+        <thead>
+            <tr>
+                <th scope="col">TYPE</th>
+                <th scope="col">DATE</th>
+                <th scope="col">LOT EDP</th>
+                <th scope="col">MATERIAL</th>
+                <th scope="col">STORAGE LOCATION</th>  
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        init_table_find_history();
+        var table = $('#tb_find_history').DataTable();
+
+        function init_table_find_history() {
+            $('#tb_find_history').DataTable({
+                "destroy": true,
+                "searching": true,
+                "lengthChange": false,
+                "paging": false,
+                "bInfo": false,
+                "stateSave": false,
+                "scrollY": '55vh',
+                "scrollCollapse": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": "./ajax_get_all_tran_tran",
+                    //"url": "/Common/STRM/Operation/ajax_get_all_tran",
+                    //"url": "/Operation/ajax_get_all_tran",
+                    "datatype": "json"
+                },
+                createdRow: function (node, data) { //Before distibute data
+                    if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                        if (data.TYPE_TRAN_NAME == "TAKE IN") {
+                            $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                        }
+                            if (data.TYPE_TRAN_NAME == "TAKE OUT") {
+                            $('td', node).eq(0).addClass('highlight_font_takeout'); //Condtion before render
+                        }
+                    }
+                },
+
+                //columnDefs: [
+                //    {
+                //        targets: [0, 1, 2, 3, 8], className: 'text-center', //Custom Condtion text-center
+                //    },
+                //],
+                "columns": [ // Init render data
+                    { data: "TYPE_TRAN_NAME", "name": "TYPE_TRAN_NAME", "autoWidth": true },
+                    {
+                        data: "REGISTER_DATE",
+                        "render": function (value) {
+                            if (value === null) return "";
+                            var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                            return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                    },
+                    { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                    { data: "MATNAME", "name": "MATNAME", "autoWidth": true },
+                    { data: "STORAGE_NAME_CONCAT", "name": "STORAGE_NAME_CONCAT", "autoWidth": true },
+             
+                ], // end columns
+                "order": [[1, "desc"]]
+            });
+        }
+
+        $("#back_btn").click(function () {
+            window.history.back();
+        });
+
+    });
+</script>

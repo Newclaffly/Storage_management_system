@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "image_plot";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <!-- JS -->
+    <script type="text/javascript" src="~/Scripts/Annotate-Images/js/KBmapmarkers.js"></script>
+    <script type="text/javascript" src="~/Scripts/Annotate-Images/js/KBmapmarkersCords.js"></script>
+    <!-- CSS-->
+    <link rel="stylesheet" href="~/Scripts/Annotate-Images/css/KBmapmarkers.css">
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <section class="KBmap" id="KBtestmap"></section>
+
+    <script>
+        $(document).ready(function () {
+            var myData =
+            {
+                "mapMarker1": {
+                    "cordX": "44.36",
+                    "cordY": "59.78",
+                    "icon": "./map-marker.svg",
+                    //"icon": "/Common/STRM/Scripts/Annotate-Images/map-marker.svg",
+                    "modal": {
+                        "title": "Info 1",
+                        "content": "<p>More Description Here</p>"
+                    }
+                }
+                //"mapMarker2": {
+                //    "cordX": "32.15",
+                //    "cordY": "53.34",
+                //    "icon": "map-marker.svg",
+                //    "modal": {
+                //        "title": "Info 2",
+                //        "content": "<p>More Description Here</p>"
+                //    }
+                //},
+                //"mapMarker3": {
+                //    "cordX": "49.93",
+                //    "cordY": "53.93",
+                //    "icon": "map-marker.svg",
+                //    "modal": {
+                //        "title": "Info 3",
+                //        "content": "<p>More Description Here</p>"
+                //    }
+                //}
+            };
+            createKBmap('KBtestmap', './HTPS_B3.jpg');
+            //createKBmap('KBtestmap', '/Common/STRM/Scripts/Annotate-Images/HTPS_B3.jpg');
+            KBtestmap.importJSON(myData);
+            KBtestmap.showAllMapMarkers();
+
+
+        });
+    </script>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

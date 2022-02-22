@@ -1,0 +1,326 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@if (Session["GOALBAL_ID"] != null)
+{
+    <style>
+        #table-custom td {
+            color: black;
+        }
+
+        .dataTable thead .sorting_asc,
+        .dataTable thead .sorting_desc,
+        .dataTable thead .sorting {
+            padding-left: 2.2rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        #table-custom {
+            font-size: 0.55rem;
+        }
+
+        .highlight_font_register {
+            background-color: dodgerblue;
+            color: white;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+    <input type="hidden" value="@Session["GOALBAL_ID"].ToString()" id="temp_user" />
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom">
+        <h5 class="mr-2">TAKE IN BY SYSTEM STORAGE UPDATE DATE: @DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")</h5>
+    </div>
+    <!-- CONTENT SEARCHING -->
+    <div class="row justify-content-start  mt-3">
+        <div class="col-sm-3">
+            <lable>BIZ</lable>
+            <select class="form-control form-control-sm" id="biz_selected">
+                <option value=''>ALL</option>
+                <option value=''>IS</option>
+                <option value='' selected='selected'>HTPS</option>
+                <option value=''>M-OLED</option>
+            </select>
+        </div>
+        @*<div class="col-sm-3">
+                <lable>STORAGE</lable>
+                <select class="form-control form-control-sm" id="storage_concat_select">
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <lable>LOT EDP</lable>
+                <select class="form-control form-control-sm" id="lot_edp_select">
+                </select>
+            </div>*@
+        @*<div class="col-sm-3">
+                <lable>DATE</lable>
+                <input type="text" class="form-control form-control-sm" id="date_select">
+            </div>
+            <div class="col-sm-3">
+                <lable>LOT EDP</lable>
+                <input type="text" class="form-control form-control-sm" id="lot_edp_select">
+            </div>
+            <div class="col-sm-3">
+                <lable>MATERIAL NAME</lable>
+                <input type="text" class="form-control form-control-sm" id="matname_select">
+            </div>
+            <div class="col-sm-3">
+                <lable>STORAGE TYPE</lable>
+                <input type="text" class="form-control form-control-sm" id="store_type_select">
+            </div>
+            <div class="col-sm-3">
+                <lable>STORAGE NO</lable>
+                <input type="text" class="form-control form-control-sm" id="store_number_select">
+            </div>*@
+        @*<div class="col-sm-3 d-flex align-items-center mt-3">
+                <button class="btn btn-sm btn-danger  ms-Icon ms-Icon--Reset" id="reset">  RESETS</button>
+                <button class="btn btn-sm btn-success ms-Icon ms-Icon--ExcelDocument ml-2" id="export_excel_lot_hold_list">    EXPORT</button>
+            </div>*@
+    </div>
+    <!-- END CONTENT SEARCHING -->
+
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered mb-0 table-custom table-hover table-striped" id="tb_find_history" style="font-size:0.73em;">
+            <thead>
+                <tr>
+                    <th scope="col">TYPE</th>
+                    <th scope="col">DATE</th>
+                    <th scope="col">LOT EDP</th>
+                    <th scope="col">MATERIAL</th>
+                    <th scope="col">STORAGE LOCATION</th>
+                    <th scope="col">HOLD EMP</th>
+                    <th scope="col" class="text-center">HOLD DESC</th>
+                    <th scope="col">TAKE IN BY</th>
+                    <th scope="col">TOOLS</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            init_table_find_history();
+            var table = $('#tb_find_history').DataTable();
+
+            function init_table_find_history() {
+                $('#tb_find_history').DataTable({
+                    "destroy": true,
+                    "searching": true,
+                    "lengthChange": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "stateSave": false,
+                    "scrollY": '55vh',
+                    "scrollCollapse": true,
+                    "ajax": {
+                        "type": "POST",
+                        "url": "./ajax_get_all_tran",
+                        //"url": "/Common/STRM/Operation/ajax_get_all_tran",
+                        //"url": "/Operation/ajax_get_all_tran",
+                        "datatype": "json"
+                    },
+                    createdRow: function (node, data) { //Before distibute data
+                        if (data.hasOwnProperty('TYPE_TRAN_NAME')) {
+                            if (data.TYPE_TRAN_NAME = "TAKE IN") {
+                                $('td', node).eq(0).addClass('highlight_font_register'); //Condtion before render
+                            }
+                        }
+                    },
+
+                    columnDefs: [
+                        {
+                            targets: [0, 1, 2, 3, 4, 5, 7, 8], className: 'text-center', //Custom Condtion text-center
+                        },
+                    ],
+                    "columns": [ // Init render data
+                        { data: "TYPE_TRAN_NAME", "name": "TYPE_TRAN_NAME", "autoWidth": true },
+                        {
+                            data: "REGISTER_DATE",
+                            "render": function (value) {
+                                if (value === null) return "";
+                                var date = eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                        },
+                        { data: "LOT_NO", "name": "LOT_NO", "autoWidth": true },
+                        { data: "MATNAME", "name": "MATNAME", "autoWidth": true },
+                        { data: "STORAGE_NAME_CONCAT", "name": "STORAGE_NAME_CONCAT", "autoWidth": true },
+                        { data: "HOLD_EMP", "name": "HOLD_EMP", "autoWidth": true },
+                        { data: "HOLD_DESC", "name": "HOLD_DESC", "autoWidth": true },
+                        { data: "REGISTER_BY", "name": "REGISTER_BY", "autoWidth": true },
+                        {//Render button packdata
+                            "render": function (data, type, Me, meta) {
+                                return '<button type="button" class=" edit_takeout mr-2 btn btn-sm btn-success" style="color:white;" aria-hidden="true"  data-toggle="modal" data-target="#myModal_take_out" ' +
+                                    'data-str_no ="' + Me.STORAGE_NO + '" data-str_name ="' + Me.STORAGE_NAME + '" data-tran_id ="' + Me.TRAN_ID + '" data-loc_id ="' + Me.LOC_ID + '" data-str_concat ="' + Me.STORAGE_NAME_CONCAT + '"    ' +
+                                    '><i class="ms-Icon ms-Icon--Accept"></i></button> ';
+                            }
+                            , "autoWidth": true
+                        },
+                    ], // end columns
+                    "order": [[1, "desc"]]
+                });
+            }
+
+            $(document).on("click", ".edit_takeout", function () {
+                var get_tran_id = $(this).data('tran_id');
+                var get_loc_id = $(this).data('loc_id');
+                var get_str_concat = $(this).data('str_concat');
+
+                $(".modal-body #tran_id").val(get_tran_id);
+                $(".modal-body #inf_card_regis").val(get_loc_id);
+                $(".modal-body #inf_str_concat").val(get_str_concat);
+            });
+
+            //$('#btn_confirm').click(function () {
+            //    var confirme_value = {
+            //        "TRAN_ID": $("#tran_id").val(),
+            //        "TYPE_TRAN_ID": 1,
+            //    }
+            //    console.log(confirme_value);
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "./update_takeout_finding",
+            //        //url: "/Common/STRM/Operation/update_takeout_finding",
+            //        //url: "/Operation/record_reason",
+            //        data: { confirme_value: confirme_value },
+            //        datatype: "json",
+            //        success: function (data) {
+            //            $('#myModal_take_out').modal('hide');
+            //            swal({
+            //                title: "Confirme success!",
+            //                text: "You confirme of the information success!",
+            //                icon: "success",
+            //                button: "OK!",
+            //            });
+            //            $('#tb_find_history').DataTable().ajax.reload();
+            //            //setInterval(function () {
+            //            //    scrollPos = $(".dataTables_scrollBody").scrollTop();
+            //            //    table.ajax.reload(function () {
+            //            //        $(".dataTables_scrollBody").scrollTop(scrollPos);
+            //            //    }, false);
+            //            //}, 1000);
+            //        },
+            //        error: function (request, status, error) {
+            //            $('#myModal_take_out').attr('required', true);
+            //            $('#myModal_take_out').val("");
+            //            $('#myModal_take_out').modal('hide');
+            //            swal({
+            //                title: "Fail Confirme!",
+            //                text: "Please check the correct of the information.!",
+            //                icon: "error",
+            //                button: "OK",
+            //            });
+            //        }
+            //    })
+            //});
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "./ajax_get_all_location",
+            //    //url: "/Common/STRM/Operation/ajax_get_all_location",
+            //    //url: "/Operation/ajax_get_all_location",
+            //    //data: { 'param_name': biz_selected },
+            //    "datatype": "json",
+            //    success: function (data) {
+            //        //render products to appropriate dropdown
+            //        var $select = $('#storage_concat_select');
+            //        $.each(data, function (i) {
+            //            $select.prepend('<option value="">ALL</option>');
+            //            $.each(data[i], function (key, val) {
+            //                $select.append('<option value=' + val + '>' + val + '</option>');
+            //            });
+            //        });
+            //    },
+            //    error: function (error) {
+            //        console.log(error);
+            //    }
+            //});
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "./ajax_search_get_all_lot",
+            //    //url: "/Common/STRM/Operation/ajax_search_get_all_lot",
+            //    //url: "/Operation/ajax_search_get_all_lot",
+            //    //data: { 'param_name': biz_selected },
+            //    "datatype": "json",
+            //    success: function (data) {
+            //        //render products to appropriate dropdown
+            //        var $select = $('#lot_edp_select');
+            //        $.each(data, function (i) {
+            //            $select.prepend('<option value="">ALL</option>');
+            //            $.each(data[i], function (key, val) {
+            //                $select.append('<option value=' + val + '>' + val + '</option>');
+            //            });
+            //        });
+            //    },
+            //    error: function (error) {
+            //        console.log(error);
+            //    }
+            //});
+
+            //$('#storage_concat_select').on('change', function () {
+            //    var search = [];
+            //    $.each($('#storage_concat_select option:selected'), function () {
+            //        search.push($(this).val());
+            //    });
+
+            //    search = search.join('|');
+            //    table.column(4).search(search, true, false).draw();
+            //});
+
+            //$('#lot_edp_select').on('change', function () {
+            //    var search = [];
+            //    $.each($('#lot_edp_select option:selected'), function () {
+            //        search.push($(this).val());
+            //    });
+
+            //    search = search.join('|');
+            //    table.column(2).search(search, true, false).draw();
+            //});
+
+            $("#back_btn").click(function () {
+                window.history.back();
+            });
+
+        });
+    </script>
+
+
+    <div class="modal fade" id="myModal_take_out" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please confirm location for take in</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <div class="form-group">
+                            <label class="text-center">Location</label>
+                            <input type="text" class="form-control form-control-custom" id="inf_str_concat" placeholder="">
+                            <input type="hidden" class="form-control form-control-custom" id="inf_card_regis" placeholder="">
+                            <input type="hidden" class="form-control form-control-custom" id="tran_id" placeholder="">
+                        </div>
+                    </div>
+                    <input type="hidden" class="" id="lot_inf">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="btn_confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    Response.Redirect("~/Login/Login_axis");
+}

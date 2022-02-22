@@ -1,0 +1,797 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="STRMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tb_biz">
+          <Key>
+            <PropertyRef Name="BIZ_ID" />
+          </Key>
+          <Property Name="BIZ_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BIZ_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="BIZ_PROCESS" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_cord_image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="STORAGE_ID" Type="int" />
+          <Property Name="CORD_X" Type="varchar" MaxLength="50" />
+          <Property Name="CORD_Y" Type="varchar" MaxLength="50" />
+          <Property Name="ICON" Type="varchar(max)" />
+          <Property Name="MODAL" Type="varchar(max)" />
+          <Property Name="CREATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="CREATE_DATE" Type="datetime" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_flag">
+          <Key>
+            <PropertyRef Name="TYPE_SYSTEM_ID" />
+          </Key>
+          <Property Name="TYPE_SYSTEM_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TYPE_SYSTEM_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_status">
+          <Key>
+            <PropertyRef Name="STATUS_ID" />
+          </Key>
+          <Property Name="STATUS_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="STATUS_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_storage_auto_trackin">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOC_ID" Type="int" />
+          <Property Name="STORAGE_PROCESS" Type="varchar" MaxLength="50" />
+          <Property Name="TYPE_FORMAT_ALIAS" Type="varchar" MaxLength="50" />
+          <Property Name="TYPE_RECEPIT" Type="varchar" MaxLength="50" />
+          <Property Name="COLOR" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tb_storage_information">
+          <Key>
+            <PropertyRef Name="LOC_ID" />
+          </Key>
+          <Property Name="LOC_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BIZ_ID" Type="int" />
+          <Property Name="STORAGE_TYPE_ID" Type="int" />
+          <Property Name="STORAGE_NO" Type="varchar" MaxLength="50" />
+          <Property Name="STORAGE_ORDER_NO" Type="varchar" MaxLength="50" />
+          <Property Name="STORAGE_CONDITION_ID" Type="int" />
+          <Property Name="STORAGE_PROCESS" Type="varchar" MaxLength="50" />
+          <Property Name="TYPE_FORMAT_ALIAS" Type="varchar" MaxLength="50" />
+          <Property Name="STORAGE_MAX" Type="int" />
+          <Property Name="STORAGE_TOTAL" Type="int" />
+          <Property Name="STORAGE_STATUS" Type="int" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_stroage_condition">
+          <Key>
+            <PropertyRef Name="STORAGE_CONDITION_ID" />
+          </Key>
+          <Property Name="STORAGE_CONDITION_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="STORAGE_CONDITION_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="STORAGE_CONDITION_NAME_ALIAS" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_temp_maual_data">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOT_NO" Type="varchar" MaxLength="50" />
+          <Property Name="PART_CODE" Type="varchar" MaxLength="50" />
+          <Property Name="QUANTITY" Type="varchar" MaxLength="50" />
+          <Property Name="LOC_ID" Type="int" />
+          <Property Name="MAN_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="OPE_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="HOLD_DESC" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tb_transaction">
+          <Key>
+            <PropertyRef Name="TRAN_ID" />
+          </Key>
+          <Property Name="TRAN_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOT_NO" Type="varchar" MaxLength="50" />
+          <Property Name="PART_CODE" Type="varchar" MaxLength="50" />
+          <Property Name="QTY" Type="float" />
+          <Property Name="TYPE_SYSTEM_ID" Type="int" />
+          <Property Name="TYPE_TRAN_ID" Type="int" />
+          <Property Name="LOC_ID" Type="int" />
+          <Property Name="REGISTER_BY" Type="varchar" MaxLength="50" />
+          <Property Name="REGISTER_DATE" Type="datetime" />
+          <Property Name="TAKE_OUT_BY" Type="varchar" MaxLength="50" />
+          <Property Name="TAKE_OUT_DATE" Type="datetime" />
+          <Property Name="CREATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="CREATE_DATE" Type="datetime" />
+          <Property Name="STATUS_ID" Type="int" />
+          <Property Name="FLAG_CONFIRM" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tb_type_storage">
+          <Key>
+            <PropertyRef Name="STORAGE_TYPE_ID" />
+          </Key>
+          <Property Name="STORAGE_TYPE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="STORAGE_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="STORAGE_NAME_ALIAS" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tb_type_storage_format">
+          <Key>
+            <PropertyRef Name="TYPE_FORMAT_ALIAS" />
+          </Key>
+          <Property Name="TYPE_FORMAT_ALIAS" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TYPE_FORMAT_NAME" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tb_type_tran">
+          <Key>
+            <PropertyRef Name="TYPE_TRAN_ID" />
+          </Key>
+          <Property Name="TYPE_TRAN_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TYPE_TRAN_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_BY" Type="varchar" MaxLength="50" />
+          <Property Name="UPDATE_DATE" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'STRM.dbo.sdt_member' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="sdt_member">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="NameEng" Type="nvarchar" MaxLength="20" />
+          <Property Name="SurnameEng" Type="nvarchar" MaxLength="30" />
+          <Property Name="NameThai" Type="nvarchar" MaxLength="20" />
+          <Property Name="SurnameThai" Type="nvarchar" MaxLength="30" />
+          <Property Name="Organize" Type="nvarchar" MaxLength="12" />
+          <Property Name="Position" Type="nvarchar" MaxLength="30" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="GlobalID" Type="nchar" MaxLength="10" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="GenerateDate" Type="datetime" />
+          <Property Name="Level" Type="int" />
+          <Property Name="Process" Type="nvarchar" MaxLength="4" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="nvarchar" MaxLength="2" />
+        </EntityType>
+        <Function Name="sp_display_storage_decode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_display_storage_inf" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_fillter_material" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_hold_tracking" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_hold_tracking_summary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_login_axis" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_register_tran" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LOT_NO" Type="varchar(max)" Mode="In" />
+          <Parameter Name="PART_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="QTY" Type="float" Mode="In" />
+          <Parameter Name="TYPE_SYSTEM_ID" Type="int" Mode="In" />
+          <Parameter Name="TYPE_TRAN_ID" Type="int" Mode="In" />
+          <Parameter Name="LOC_ID" Type="int" Mode="In" />
+          <Parameter Name="CREATE_BY" Type="varchar" Mode="In" />
+          <Parameter Name="REGISTER_BY" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_report_finding_takein" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_take_out_tran" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LOT_NO" Type="varchar(max)" Mode="In" />
+          <Parameter Name="PART_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="QTY" Type="float" Mode="In" />
+          <Parameter Name="TYPE_SYSTEM_ID" Type="int" Mode="In" />
+          <Parameter Name="TYPE_TRAN_ID" Type="int" Mode="In" />
+          <Parameter Name="LOC_ID" Type="int" Mode="In" />
+          <Parameter Name="CREATE_BY" Type="varchar" Mode="In" />
+          <Parameter Name="TAKE_OUT_BY" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_update_takeout_finding" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TRAN_ID" Type="int" Mode="In" />
+          <Parameter Name="TYPE_TRAN_ID" Type="int" Mode="In" />
+          <Parameter Name="TAKE_OUT_BY" Type="varchar(max)" Mode="In" />
+        </Function>
+        <EntityContainer Name="STRMModelStoreContainer">
+          <EntitySet Name="tb_biz" EntityType="Self.tb_biz" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_cord_image" EntityType="Self.tb_cord_image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_flag" EntityType="Self.tb_flag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_status" EntityType="Self.tb_status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_storage_auto_trackin" EntityType="Self.tb_storage_auto_trackin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_storage_information" EntityType="Self.tb_storage_information" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_stroage_condition" EntityType="Self.tb_stroage_condition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_temp_maual_data" EntityType="Self.tb_temp_maual_data" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_transaction" EntityType="Self.tb_transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_type_storage" EntityType="Self.tb_type_storage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_type_storage_format" EntityType="Self.tb_type_storage_format" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tb_type_tran" EntityType="Self.tb_type_tran" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sdt_member" EntityType="Self.sdt_member" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [sdt_member].[ID] AS [ID], 
+    [sdt_member].[NameEng] AS [NameEng], 
+    [sdt_member].[SurnameEng] AS [SurnameEng], 
+    [sdt_member].[NameThai] AS [NameThai], 
+    [sdt_member].[SurnameThai] AS [SurnameThai], 
+    [sdt_member].[Organize] AS [Organize], 
+    [sdt_member].[Position] AS [Position], 
+    [sdt_member].[Email] AS [Email], 
+    [sdt_member].[GlobalID] AS [GlobalID], 
+    [sdt_member].[UpdateDate] AS [UpdateDate], 
+    [sdt_member].[GenerateDate] AS [GenerateDate], 
+    [sdt_member].[Level] AS [Level], 
+    [sdt_member].[Process] AS [Process], 
+    [sdt_member].[Password] AS [Password], 
+    [sdt_member].[Status] AS [Status]
+    FROM [dbo].[sdt_member] AS [sdt_member]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="STRMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="STRMEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="sp_fillter_material" ReturnType="Collection(STRMModel.sp_fillter_material_Result)" />
+          <FunctionImport Name="sp_display_storage_inf" ReturnType="Collection(STRMModel.sp_display_storage_inf_Result)" />
+          <FunctionImport Name="sp_register_tran">
+            <Parameter Name="LOT_NO" Mode="In" Type="String" />
+            <Parameter Name="PART_CODE" Mode="In" Type="String" />
+            <Parameter Name="QTY" Mode="In" Type="Double" />
+            <Parameter Name="TYPE_SYSTEM_ID" Mode="In" Type="Int32" />
+            <Parameter Name="TYPE_TRAN_ID" Mode="In" Type="Int32" />
+            <Parameter Name="LOC_ID" Mode="In" Type="Int32" />
+            <Parameter Name="CREATE_BY" Mode="In" Type="String" />
+            <Parameter Name="REGISTER_BY" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_take_out_tran">
+            <Parameter Name="LOT_NO" Mode="In" Type="String" />
+            <Parameter Name="PART_CODE" Mode="In" Type="String" />
+            <Parameter Name="QTY" Mode="In" Type="Double" />
+            <Parameter Name="TYPE_SYSTEM_ID" Mode="In" Type="Int32" />
+            <Parameter Name="TYPE_TRAN_ID" Mode="In" Type="Int32" />
+            <Parameter Name="LOC_ID" Mode="In" Type="Int32" />
+            <Parameter Name="CREATE_BY" Mode="In" Type="String" />
+            <Parameter Name="TAKE_OUT_BY" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_hold_tracking" ReturnType="Collection(STRMModel.sp_hold_tracking_Result)" />
+          <FunctionImport Name="sp_hold_tracking_summary" ReturnType="Collection(STRMModel.sp_hold_tracking_summary_Result)" />
+          <FunctionImport Name="sp_display_storage_decode" ReturnType="Collection(STRMModel.sp_display_storage_decode_Result)" />
+          <FunctionImport Name="sp_login_axis" ReturnType="Collection(STRMModel.sp_login_axis_Result)" />
+          <FunctionImport Name="sp_update_takeout_finding">
+            <Parameter Name="TRAN_ID" Mode="In" Type="Int32" />
+            <Parameter Name="TYPE_TRAN_ID" Mode="In" Type="Int32" />
+            <Parameter Name="TAKE_OUT_BY" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="tb_biz" EntityType="STRMModel.tb_biz" />
+          <EntitySet Name="tb_cord_image" EntityType="STRMModel.tb_cord_image" />
+          <EntitySet Name="tb_flag" EntityType="STRMModel.tb_flag" />
+          <EntitySet Name="tb_status" EntityType="STRMModel.tb_status" />
+          <EntitySet Name="tb_storage_auto_trackin" EntityType="STRMModel.tb_storage_auto_trackin" />
+          <EntitySet Name="tb_storage_information" EntityType="STRMModel.tb_storage_information" />
+          <EntitySet Name="tb_stroage_condition" EntityType="STRMModel.tb_stroage_condition" />
+          <EntitySet Name="tb_temp_maual_data" EntityType="STRMModel.tb_temp_maual_data" />
+          <EntitySet Name="tb_transaction" EntityType="STRMModel.tb_transaction" />
+          <EntitySet Name="tb_type_storage" EntityType="STRMModel.tb_type_storage" />
+          <EntitySet Name="tb_type_storage_format" EntityType="STRMModel.tb_type_storage_format" />
+          <EntitySet Name="tb_type_tran" EntityType="STRMModel.tb_type_tran" />
+          <EntitySet Name="sdt_member" EntityType="STRMModel.sdt_member" />
+          <FunctionImport Name="sp_report_finding_takein" />
+          </EntityContainer>
+        <ComplexType Name="sp_fillter_material_Result">
+          <Property Type="String" Name="BIZ_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CAT_TYPE" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="MATGROUP" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="MATCODE" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="MATNAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="UOM" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ITEM_NUMBER" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="sp_display_storage_inf_Result">
+          <Property Type="String" Name="LOT_NO" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MATNAME" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="TYPE_TRAN_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="HOLD_DESC" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="HOLD_EMP" Nullable="true" MaxLength="6" />
+          <Property Type="String" Name="STORAGE_NAME_CONCAT" Nullable="false" MaxLength="201" />
+          <Property Type="Int32" Name="LOC_ID" Nullable="true" />
+          <Property Type="String" Name="OPE_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="MAN_NAME" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="QUANTITY_CURRENT" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="true" />
+          <Property Type="DateTime" Name="REGISTER_DATE" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="TRAN_ID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_hold_tracking_Result">
+          <Property Type="String" Name="LOT_NO" Nullable="false" MaxLength="14" />
+          <Property Type="String" Name="LOT_HOLD_STA" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="LOT_HOLD_ITM" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="HOLD_EMP" Nullable="false" MaxLength="6" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="false" />
+          <Property Type="DateTime" Name="UPDATE_DATE" Nullable="false" />
+          <Property Type="String" Name="UPDATE_EMP" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="HOLD_DESC" Nullable="true" MaxLength="400" />
+          <Property Type="String" Name="REASON_CODE" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="sp_hold_tracking_summary_Result">
+          <Property Type="DateTime" Name="CURRENT_DATES" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="TOTAL_HOLD" Nullable="true" />
+          <Property Type="Int32" Name="HOLD_NOT_FOUND" Nullable="true" />
+          <Property Type="Int32" Name="HOLD_FOUND" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_display_storage_decode_Result">
+          <Property Type="Int32" Name="LOC_ID" Nullable="false" />
+          <Property Type="String" Name="BIZ_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_NAME_ALIAS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_NO" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_ORDER_NO" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_CONDITION_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_CONDITION_NAME_ALIAS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="STORAGE_NAME_CONCAT" Nullable="false" MaxLength="201" />
+        </ComplexType>
+        <ComplexType Name="sp_login_axis_Result">
+          <Property Type="String" Name="EMP_ID" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="PASSWORD" Nullable="true" MaxLength="8" />
+          <Property Type="String" Name="EMP_NAME" Nullable="false" MaxLength="160" />
+          <Property Type="String" Name="EMP_LINE_KB" Nullable="false" MaxLength="9" />
+          <Property Type="String" Name="DEPARTMENT_CODE" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <EntityType Name="tb_biz">
+          <Key>
+            <PropertyRef Name="BIZ_ID" />
+          </Key>
+          <Property Name="BIZ_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BIZ_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BIZ_PROCESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_cord_image">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="STORAGE_ID" Type="Int32" />
+          <Property Name="CORD_X" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CORD_Y" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ICON" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="MODAL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_DATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_flag">
+          <Key>
+            <PropertyRef Name="TYPE_SYSTEM_ID" />
+          </Key>
+          <Property Name="TYPE_SYSTEM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TYPE_SYSTEM_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_status">
+          <Key>
+            <PropertyRef Name="STATUS_ID" />
+          </Key>
+          <Property Name="STATUS_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="STATUS_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_storage_auto_trackin">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOC_ID" Type="Int32" />
+          <Property Name="STORAGE_PROCESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE_FORMAT_ALIAS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE_RECEPIT" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="COLOR" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tb_storage_information">
+          <Key>
+            <PropertyRef Name="LOC_ID" />
+          </Key>
+          <Property Name="LOC_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BIZ_ID" Type="Int32" />
+          <Property Name="STORAGE_TYPE_ID" Type="Int32" />
+          <Property Name="STORAGE_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STORAGE_ORDER_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STORAGE_CONDITION_ID" Type="Int32" />
+          <Property Name="STORAGE_PROCESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE_FORMAT_ALIAS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STORAGE_MAX" Type="Int32" />
+          <Property Name="STORAGE_TOTAL" Type="Int32" />
+          <Property Name="STORAGE_STATUS" Type="Int32" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_stroage_condition">
+          <Key>
+            <PropertyRef Name="STORAGE_CONDITION_ID" />
+          </Key>
+          <Property Name="STORAGE_CONDITION_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="STORAGE_CONDITION_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STORAGE_CONDITION_NAME_ALIAS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_temp_maual_data">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOT_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PART_CODE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QUANTITY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LOC_ID" Type="Int32" />
+          <Property Name="MAN_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OPE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HOLD_DESC" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tb_transaction">
+          <Key>
+            <PropertyRef Name="TRAN_ID" />
+          </Key>
+          <Property Name="TRAN_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOT_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PART_CODE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QTY" Type="Double" />
+          <Property Name="TYPE_SYSTEM_ID" Type="Int32" />
+          <Property Name="TYPE_TRAN_ID" Type="Int32" />
+          <Property Name="LOC_ID" Type="Int32" />
+          <Property Name="REGISTER_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="REGISTER_DATE" Type="DateTime" Precision="3" />
+          <Property Name="TAKE_OUT_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TAKE_OUT_DATE" Type="DateTime" Precision="3" />
+          <Property Name="CREATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_DATE" Type="DateTime" Precision="3" />
+          <Property Name="STATUS_ID" Type="Int32" />
+          <Property Name="FLAG_CONFIRM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tb_type_storage">
+          <Key>
+            <PropertyRef Name="STORAGE_TYPE_ID" />
+          </Key>
+          <Property Name="STORAGE_TYPE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="STORAGE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STORAGE_NAME_ALIAS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tb_type_storage_format">
+          <Key>
+            <PropertyRef Name="TYPE_FORMAT_ALIAS" />
+          </Key>
+          <Property Name="TYPE_FORMAT_ALIAS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE_FORMAT_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tb_type_tran">
+          <Key>
+            <PropertyRef Name="TYPE_TRAN_ID" />
+          </Key>
+          <Property Name="TYPE_TRAN_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TYPE_TRAN_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UPDATE_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="sdt_member">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="NameEng" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SurnameEng" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="NameThai" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SurnameThai" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Organize" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GlobalID" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="GenerateDate" Type="DateTime" Precision="3" />
+          <Property Name="Level" Type="Int32" />
+          <Property Name="Process" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="STRMModelStoreContainer" CdmEntityContainer="STRMEntities">
+          <FunctionImportMapping FunctionImportName="sp_fillter_material" FunctionName="STRMModel.Store.sp_fillter_material">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STRMModel.sp_fillter_material_Result">
+                <ScalarProperty Name="BIZ_NAME" ColumnName="BIZ_NAME" />
+                <ScalarProperty Name="CAT_TYPE" ColumnName="CAT_TYPE" />
+                <ScalarProperty Name="MATGROUP" ColumnName="MATGROUP" />
+                <ScalarProperty Name="MATCODE" ColumnName="MATCODE" />
+                <ScalarProperty Name="MATNAME" ColumnName="MATNAME" />
+                <ScalarProperty Name="UOM" ColumnName="UOM" />
+                <ScalarProperty Name="ITEM_NUMBER" ColumnName="ITEM_NUMBER" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_display_storage_inf" FunctionName="STRMModel.Store.sp_display_storage_inf">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STRMModel.sp_display_storage_inf_Result">
+                <ScalarProperty Name="LOT_NO" ColumnName="LOT_NO" />
+                <ScalarProperty Name="MATNAME" ColumnName="MATNAME" />
+                <ScalarProperty Name="TYPE_TRAN_NAME" ColumnName="TYPE_TRAN_NAME" />
+                <ScalarProperty Name="HOLD_DESC" ColumnName="HOLD_DESC" />
+                <ScalarProperty Name="HOLD_EMP" ColumnName="HOLD_EMP" />
+                <ScalarProperty Name="STORAGE_NAME_CONCAT" ColumnName="STORAGE_NAME_CONCAT" />
+                <ScalarProperty Name="LOC_ID" ColumnName="LOC_ID" />
+                <ScalarProperty Name="OPE_NAME" ColumnName="OPE_NAME" />
+                <ScalarProperty Name="MAN_NAME" ColumnName="MAN_NAME" />
+                <ScalarProperty Name="QUANTITY_CURRENT" ColumnName="QUANTITY_CURRENT" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="REGISTER_DATE" ColumnName="REGISTER_DATE" />
+                <ScalarProperty Name="TRAN_ID" ColumnName="TRAN_ID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_register_tran" FunctionName="STRMModel.Store.sp_register_tran" />
+          <FunctionImportMapping FunctionImportName="sp_take_out_tran" FunctionName="STRMModel.Store.sp_take_out_tran" />
+          <FunctionImportMapping FunctionImportName="sp_hold_tracking" FunctionName="STRMModel.Store.sp_hold_tracking">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STRMModel.sp_hold_tracking_Result">
+                <ScalarProperty Name="LOT_NO" ColumnName="LOT_NO" />
+                <ScalarProperty Name="LOT_HOLD_STA" ColumnName="LOT_HOLD_STA" />
+                <ScalarProperty Name="LOT_HOLD_ITM" ColumnName="LOT_HOLD_ITM" />
+                <ScalarProperty Name="HOLD_EMP" ColumnName="HOLD_EMP" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_EMP" ColumnName="UPDATE_EMP" />
+                <ScalarProperty Name="HOLD_DESC" ColumnName="HOLD_DESC" />
+                <ScalarProperty Name="REASON_CODE" ColumnName="REASON_CODE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_hold_tracking_summary" FunctionName="STRMModel.Store.sp_hold_tracking_summary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STRMModel.sp_hold_tracking_summary_Result">
+                <ScalarProperty Name="CURRENT_DATES" ColumnName="CURRENT_DATES" />
+                <ScalarProperty Name="TOTAL_HOLD" ColumnName="TOTAL_HOLD" />
+                <ScalarProperty Name="HOLD_NOT_FOUND" ColumnName="HOLD_NOT_FOUND" />
+                <ScalarProperty Name="HOLD_FOUND" ColumnName="HOLD_FOUND" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_display_storage_decode" FunctionName="STRMModel.Store.sp_display_storage_decode">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STRMModel.sp_display_storage_decode_Result">
+                <ScalarProperty Name="LOC_ID" ColumnName="LOC_ID" />
+                <ScalarProperty Name="BIZ_NAME" ColumnName="BIZ_NAME" />
+                <ScalarProperty Name="STORAGE_NAME" ColumnName="STORAGE_NAME" />
+                <ScalarProperty Name="STORAGE_NAME_ALIAS" ColumnName="STORAGE_NAME_ALIAS" />
+                <ScalarProperty Name="STORAGE_NO" ColumnName="STORAGE_NO" />
+                <ScalarProperty Name="STORAGE_ORDER_NO" ColumnName="STORAGE_ORDER_NO" />
+                <ScalarProperty Name="STORAGE_CONDITION_NAME" ColumnName="STORAGE_CONDITION_NAME" />
+                <ScalarProperty Name="STORAGE_CONDITION_NAME_ALIAS" ColumnName="STORAGE_CONDITION_NAME_ALIAS" />
+                <ScalarProperty Name="STORAGE_NAME_CONCAT" ColumnName="STORAGE_NAME_CONCAT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_login_axis" FunctionName="STRMModel.Store.sp_login_axis">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STRMModel.sp_login_axis_Result">
+                <ScalarProperty Name="EMP_ID" ColumnName="EMP_ID" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+                <ScalarProperty Name="EMP_NAME" ColumnName="EMP_NAME" />
+                <ScalarProperty Name="EMP_LINE_KB" ColumnName="EMP_LINE_KB" />
+                <ScalarProperty Name="DEPARTMENT_CODE" ColumnName="DEPARTMENT_CODE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_update_takeout_finding" FunctionName="STRMModel.Store.sp_update_takeout_finding" />
+          <EntitySetMapping Name="tb_biz">
+            <EntityTypeMapping TypeName="STRMModel.tb_biz">
+              <MappingFragment StoreEntitySet="tb_biz">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="BIZ_PROCESS" ColumnName="BIZ_PROCESS" />
+                <ScalarProperty Name="BIZ_NAME" ColumnName="BIZ_NAME" />
+                <ScalarProperty Name="BIZ_ID" ColumnName="BIZ_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_cord_image">
+            <EntityTypeMapping TypeName="STRMModel.tb_cord_image">
+              <MappingFragment StoreEntitySet="tb_cord_image">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="MODAL" ColumnName="MODAL" />
+                <ScalarProperty Name="ICON" ColumnName="ICON" />
+                <ScalarProperty Name="CORD_Y" ColumnName="CORD_Y" />
+                <ScalarProperty Name="CORD_X" ColumnName="CORD_X" />
+                <ScalarProperty Name="STORAGE_ID" ColumnName="STORAGE_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_flag">
+            <EntityTypeMapping TypeName="STRMModel.tb_flag">
+              <MappingFragment StoreEntitySet="tb_flag">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="TYPE_SYSTEM_NAME" ColumnName="TYPE_SYSTEM_NAME" />
+                <ScalarProperty Name="TYPE_SYSTEM_ID" ColumnName="TYPE_SYSTEM_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_status">
+            <EntityTypeMapping TypeName="STRMModel.tb_status">
+              <MappingFragment StoreEntitySet="tb_status">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="STATUS_NAME" ColumnName="STATUS_NAME" />
+                <ScalarProperty Name="STATUS_ID" ColumnName="STATUS_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_storage_auto_trackin">
+            <EntityTypeMapping TypeName="STRMModel.tb_storage_auto_trackin">
+              <MappingFragment StoreEntitySet="tb_storage_auto_trackin">
+                <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+                <ScalarProperty Name="TYPE_RECEPIT" ColumnName="TYPE_RECEPIT" />
+                <ScalarProperty Name="TYPE_FORMAT_ALIAS" ColumnName="TYPE_FORMAT_ALIAS" />
+                <ScalarProperty Name="STORAGE_PROCESS" ColumnName="STORAGE_PROCESS" />
+                <ScalarProperty Name="LOC_ID" ColumnName="LOC_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_storage_information">
+            <EntityTypeMapping TypeName="STRMModel.tb_storage_information">
+              <MappingFragment StoreEntitySet="tb_storage_information">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="STORAGE_STATUS" ColumnName="STORAGE_STATUS" />
+                <ScalarProperty Name="STORAGE_TOTAL" ColumnName="STORAGE_TOTAL" />
+                <ScalarProperty Name="STORAGE_MAX" ColumnName="STORAGE_MAX" />
+                <ScalarProperty Name="TYPE_FORMAT_ALIAS" ColumnName="TYPE_FORMAT_ALIAS" />
+                <ScalarProperty Name="STORAGE_PROCESS" ColumnName="STORAGE_PROCESS" />
+                <ScalarProperty Name="STORAGE_CONDITION_ID" ColumnName="STORAGE_CONDITION_ID" />
+                <ScalarProperty Name="STORAGE_ORDER_NO" ColumnName="STORAGE_ORDER_NO" />
+                <ScalarProperty Name="STORAGE_NO" ColumnName="STORAGE_NO" />
+                <ScalarProperty Name="STORAGE_TYPE_ID" ColumnName="STORAGE_TYPE_ID" />
+                <ScalarProperty Name="BIZ_ID" ColumnName="BIZ_ID" />
+                <ScalarProperty Name="LOC_ID" ColumnName="LOC_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_stroage_condition">
+            <EntityTypeMapping TypeName="STRMModel.tb_stroage_condition">
+              <MappingFragment StoreEntitySet="tb_stroage_condition">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="STORAGE_CONDITION_NAME_ALIAS" ColumnName="STORAGE_CONDITION_NAME_ALIAS" />
+                <ScalarProperty Name="STORAGE_CONDITION_NAME" ColumnName="STORAGE_CONDITION_NAME" />
+                <ScalarProperty Name="STORAGE_CONDITION_ID" ColumnName="STORAGE_CONDITION_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_temp_maual_data">
+            <EntityTypeMapping TypeName="STRMModel.tb_temp_maual_data">
+              <MappingFragment StoreEntitySet="tb_temp_maual_data">
+                <ScalarProperty Name="HOLD_DESC" ColumnName="HOLD_DESC" />
+                <ScalarProperty Name="OPE_NAME" ColumnName="OPE_NAME" />
+                <ScalarProperty Name="MAN_NAME" ColumnName="MAN_NAME" />
+                <ScalarProperty Name="LOC_ID" ColumnName="LOC_ID" />
+                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+                <ScalarProperty Name="PART_CODE" ColumnName="PART_CODE" />
+                <ScalarProperty Name="LOT_NO" ColumnName="LOT_NO" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_transaction">
+            <EntityTypeMapping TypeName="STRMModel.tb_transaction">
+              <MappingFragment StoreEntitySet="tb_transaction">
+                <ScalarProperty Name="FLAG_CONFIRM" ColumnName="FLAG_CONFIRM" />
+                <ScalarProperty Name="STATUS_ID" ColumnName="STATUS_ID" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="TAKE_OUT_DATE" ColumnName="TAKE_OUT_DATE" />
+                <ScalarProperty Name="TAKE_OUT_BY" ColumnName="TAKE_OUT_BY" />
+                <ScalarProperty Name="REGISTER_DATE" ColumnName="REGISTER_DATE" />
+                <ScalarProperty Name="REGISTER_BY" ColumnName="REGISTER_BY" />
+                <ScalarProperty Name="LOC_ID" ColumnName="LOC_ID" />
+                <ScalarProperty Name="TYPE_TRAN_ID" ColumnName="TYPE_TRAN_ID" />
+                <ScalarProperty Name="TYPE_SYSTEM_ID" ColumnName="TYPE_SYSTEM_ID" />
+                <ScalarProperty Name="QTY" ColumnName="QTY" />
+                <ScalarProperty Name="PART_CODE" ColumnName="PART_CODE" />
+                <ScalarProperty Name="LOT_NO" ColumnName="LOT_NO" />
+                <ScalarProperty Name="TRAN_ID" ColumnName="TRAN_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_type_storage">
+            <EntityTypeMapping TypeName="STRMModel.tb_type_storage">
+              <MappingFragment StoreEntitySet="tb_type_storage">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="STORAGE_NAME_ALIAS" ColumnName="STORAGE_NAME_ALIAS" />
+                <ScalarProperty Name="STORAGE_NAME" ColumnName="STORAGE_NAME" />
+                <ScalarProperty Name="STORAGE_TYPE_ID" ColumnName="STORAGE_TYPE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_type_storage_format">
+            <EntityTypeMapping TypeName="STRMModel.tb_type_storage_format">
+              <MappingFragment StoreEntitySet="tb_type_storage_format">
+                <ScalarProperty Name="TYPE_FORMAT_NAME" ColumnName="TYPE_FORMAT_NAME" />
+                <ScalarProperty Name="TYPE_FORMAT_ALIAS" ColumnName="TYPE_FORMAT_ALIAS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tb_type_tran">
+            <EntityTypeMapping TypeName="STRMModel.tb_type_tran">
+              <MappingFragment StoreEntitySet="tb_type_tran">
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="TYPE_TRAN_NAME" ColumnName="TYPE_TRAN_NAME" />
+                <ScalarProperty Name="TYPE_TRAN_ID" ColumnName="TYPE_TRAN_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sdt_member">
+            <EntityTypeMapping TypeName="STRMModel.sdt_member">
+              <MappingFragment StoreEntitySet="sdt_member">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Process" ColumnName="Process" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="GenerateDate" ColumnName="GenerateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="GlobalID" ColumnName="GlobalID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Organize" ColumnName="Organize" />
+                <ScalarProperty Name="SurnameThai" ColumnName="SurnameThai" />
+                <ScalarProperty Name="NameThai" ColumnName="NameThai" />
+                <ScalarProperty Name="SurnameEng" ColumnName="SurnameEng" />
+                <ScalarProperty Name="NameEng" ColumnName="NameEng" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_report_finding_takein" FunctionName="STRMModel.Store.sp_report_finding_takein" />
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
